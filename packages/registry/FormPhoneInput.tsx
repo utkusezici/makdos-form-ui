@@ -7,7 +7,7 @@ interface FormPhoneInputProps extends IPhoneInput, Omit<GenericProps, "children"
 }
 
 function FormPhoneInput(props: FormPhoneInputProps) {
-  const [phone, setPhone] = useState(""); 
+  const [, setPhone] = useState("");
   return (
     <Generic {...props}>
       {({ field, fieldState }) => (

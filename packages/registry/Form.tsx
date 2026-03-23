@@ -4,7 +4,6 @@ import {
   DefaultValues,
   FieldValues,
   FormProvider,
-  SubmitHandler,
   useForm,
   UseFormReturn,
 } from "react-hook-form";

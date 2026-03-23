@@ -1,4 +1,4 @@
-import { forwardRef, JSX } from "react";
+import { JSX } from "react";
 
 export interface ICheckBox {
   id?: string;

@@ -8519,7 +8519,7 @@ async function add(components, options) {
   const installed = /* @__PURE__ */ new Set();
   const npmDepsToInstall = /* @__PURE__ */ new Set();
   console.log(source_default.bold(`
-Adding components to ${source_default.cyan(options.path)}
+Adding components to ${source_default.cyan(options.path ?? getConfigPath())}
 `));
   const spinner = ora("Fetching components...").start();
   try {

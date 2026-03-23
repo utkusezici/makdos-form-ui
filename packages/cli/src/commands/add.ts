@@ -99,7 +99,7 @@ export async function add(components: string[], options: { path?: string }) {
   const installed = new Set<string>();
   const npmDepsToInstall = new Set<string>();
 
-  console.log(chalk.bold(`\nAdding components to ${chalk.cyan(options.path)}\n`));
+  console.log(chalk.bold(`\nAdding components to ${chalk.cyan(options.path ?? getConfigPath())}\n`));
 
   const spinner = ora("Fetching components...").start();
 

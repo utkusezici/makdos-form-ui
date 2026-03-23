@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import CheckBox from './CheckBox'
 import { IconChevronDown, IconSearch, IconX } from '@tabler/icons-react'
 import { useFormContext } from 'react-hook-form'

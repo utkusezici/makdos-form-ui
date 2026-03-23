@@ -1,5 +1,5 @@
 import { IconAlertTriangleFilled } from '@tabler/icons-react'
-import React, { forwardRef, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export interface ITextArea {
   id?: string

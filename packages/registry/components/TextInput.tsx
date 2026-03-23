@@ -1,5 +1,5 @@
 import { IconAlertTriangleFilled, IconEye, IconEyeOff, IconSearch } from '@tabler/icons-react'
-import { ReactNode, createRef, forwardRef, useEffect, useRef, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 export interface ITextInput {
   id?: string
   name?: string
