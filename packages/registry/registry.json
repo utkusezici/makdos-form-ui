@@ -1,0 +1,92 @@
+{
+  "Form": {
+    "files": ["Form.tsx"],
+    "npmDependencies": ["react-hook-form"],
+    "registryDependencies": []
+  },
+  "Generic": {
+    "files": ["Generic.tsx"],
+    "npmDependencies": ["react-hook-form"],
+    "registryDependencies": []
+  },
+  "FormTextInput": {
+    "files": ["FormTextInput.tsx", "components/TextInput.tsx"],
+    "npmDependencies": ["react-hook-form", "@tabler/icons-react"],
+    "registryDependencies": ["Form", "Generic"]
+  },
+  "FormSelectBox": {
+    "files": ["FormSelectBox.tsx", "components/SelectBox.tsx", "components/CheckBox.tsx"],
+    "npmDependencies": ["react-hook-form", "@tabler/icons-react"],
+    "registryDependencies": ["Form", "Generic"]
+  },
+  "FormCheckBox": {
+    "files": ["FormCheckBox.tsx", "components/CheckBox.tsx"],
+    "npmDependencies": ["react-hook-form"],
+    "registryDependencies": ["Form", "Generic"]
+  },
+  "FormTextArea": {
+    "files": ["FormTextArea.tsx", "components/TextArea.tsx"],
+    "npmDependencies": ["react-hook-form"],
+    "registryDependencies": ["Form", "Generic"]
+  },
+  "FormToggle": {
+    "files": ["FormToogle.tsx", "components/Toggle.tsx"],
+    "npmDependencies": ["react-hook-form"],
+    "registryDependencies": ["Form", "Generic"]
+  },
+  "FormNumeric": {
+    "files": ["FormNumeric.tsx", "components/Numeric.tsx"],
+    "npmDependencies": ["react-hook-form", "@tabler/icons-react"],
+    "registryDependencies": ["Form", "Generic"]
+  },
+  "FormDateTime": {
+    "files": ["FormDateTime.tsx", "components/DateTime.tsx"],
+    "npmDependencies": ["react-hook-form", "react-big-calendar", "moment"],
+    "registryDependencies": ["Form", "Generic"]
+  },
+  "FormTime": {
+    "files": ["FormTime.tsx", "components/Time.tsx"],
+    "npmDependencies": ["react-hook-form", "moment"],
+    "registryDependencies": ["Form", "Generic"]
+  },
+  "FormPhoneInput": {
+    "files": ["FormPhoneInput.tsx", "components/PhoneInput.tsx"],
+    "npmDependencies": ["react-hook-form", "react-phone-input-2"],
+    "registryDependencies": ["Form", "Generic"]
+  },
+  "Button": {
+    "files": ["components/Button.tsx"],
+    "npmDependencies": ["@tabler/icons-react"],
+    "registryDependencies": []
+  },
+  "RadioButton": {
+    "files": ["components/RadioButton.tsx"],
+    "npmDependencies": [],
+    "registryDependencies": []
+  },
+  "TextEditor": {
+    "files": ["components/TextEditor.tsx"],
+    "npmDependencies": ["react-draft-wysiwyg", "draft-js", "draftjs-to-html", "html-to-draftjs"],
+    "registryDependencies": []
+  },
+  "Paginate": {
+    "files": ["components/Paginate.tsx"],
+    "npmDependencies": ["react-paginate"],
+    "registryDependencies": []
+  },
+  "ListBox": {
+    "files": ["components/ListBox.tsx"],
+    "npmDependencies": ["@tabler/icons-react"],
+    "registryDependencies": []
+  },
+  "SelectBoxGroup": {
+    "files": ["components/SelectBoxGroup.tsx", "components/CheckBox.tsx"],
+    "npmDependencies": ["@tabler/icons-react"],
+    "registryDependencies": []
+  },
+  "FileUploader": {
+    "files": ["FileUploader/FileUploader.tsx", "FileUploader/FileUploaderModal.tsx"],
+    "npmDependencies": ["@tabler/icons-react", "react-router-dom"],
+    "registryDependencies": []
+  }
+}

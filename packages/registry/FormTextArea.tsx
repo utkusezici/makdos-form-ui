@@ -1,0 +1,18 @@
+import Generic, { GenericProps } from  "./Generic";
+import TextArea,{ ITextArea } from "./components/TextArea";
+
+interface FormTextAreaProps
+  extends ITextArea,
+    Omit<GenericProps, "children"> {
+  ["name"]: string;
+}
+
+function FormTextArea(props: FormTextAreaProps) {
+  return (
+    <Generic {...props}>
+      {({ field, fieldState }) => <TextArea error={fieldState.error?.message} field={field} {...field} {...props} />}
+    </Generic>
+  );
+}
+
+export default FormTextArea;
