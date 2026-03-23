@@ -3,9 +3,7 @@ import fs from "fs-extra";
 import path from "path";
 import ora from "ora";
 import { execSync } from "child_process";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const registry = require("../registry.json");
+import registryData from "../registry.json";
 
 const REGISTRY_BASE_URL =
   "https://raw.githubusercontent.com/utkusezici/makdos-form-ui/main/packages/registry";
@@ -18,7 +16,7 @@ type RegistryItem = {
 
 type Registry = Record<string, RegistryItem>;
 
-const typedRegistry = registry as Registry;
+const typedRegistry = registryData as Registry;
 
 async function fetchFile(filePath: string): Promise<string> {
   const url = `${REGISTRY_BASE_URL}/${filePath}`;

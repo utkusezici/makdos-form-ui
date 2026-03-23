@@ -1,7 +1,5 @@
 import chalk from "chalk";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const registry = require("../registry.json");
+import registry from "../registry.json";
 
 export function list() {
   console.log(chalk.bold("\nAvailable components:\n"));
