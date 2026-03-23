@@ -88,5 +88,10 @@
     "files": ["FileUploader/FileUploader.tsx", "FileUploader/FileUploaderModal.tsx"],
     "npmDependencies": ["@tabler/icons-react", "react-router-dom"],
     "registryDependencies": []
+  },
+  "hooks": {
+    "files": ["hooks.tsx"],
+    "npmDependencies": [],
+    "registryDependencies": []
   }
 }

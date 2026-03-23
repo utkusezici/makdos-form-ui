@@ -41,7 +41,7 @@ function FormToggle(props: FormToggleProps) {
             props?.setIsCheck &&
             props?.setIsCheck(newChecked)
           }}
-          isCheck={checked !== undefined ? checked : props.defaultValue}
+          isCheck={checked ? checked : props.defaultValue}
           error={fieldState.error}
         />
       )}

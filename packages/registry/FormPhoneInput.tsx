@@ -1,4 +1,5 @@
 import PhoneInput, { IPhoneInput } from './components/PhoneInput';
+import { useState } from 'react';
 import Generic, { GenericProps } from './Generic';
 
 interface FormPhoneInputProps extends IPhoneInput, Omit<GenericProps, "children"> {
@@ -6,6 +7,7 @@ interface FormPhoneInputProps extends IPhoneInput, Omit<GenericProps, "children"
 }
 
 function FormPhoneInput(props: FormPhoneInputProps) {
+  const [phone, setPhone] = useState(""); 
   return (
     <Generic {...props}>
       {({ field, fieldState }) => (
@@ -14,7 +16,7 @@ function FormPhoneInput(props: FormPhoneInputProps) {
           {...props}
           search
           value={field.value}
-          setValue={field.onChange}
+          setValue={setPhone}
           error={fieldState.error?.message}
         />
 

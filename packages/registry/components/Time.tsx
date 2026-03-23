@@ -1,3 +1,4 @@
+import { IconAlertTriangleFilled } from '@tabler/icons-react'
 import React, { forwardRef } from 'react'
 
 export interface ITime {
@@ -40,9 +41,9 @@ const Time = ({
             <div className="flex flex-col space-y-1">
                 <div className="flex items-center space-x-1 w-full">
 
-                    <label className="text-labelcolor dark:text-darklabelcolor">{label ? label : ""}</label>
+                    <label className="text-text">{label ? label : ""}</label>
                     {required &&
-                        <span className="text-xs mt-1 text-errorcolor">*</span>
+                        <span className="text-xs mt-1 text-error">*</span>
                     }
                 </div>
                 <div className="relative flex">
@@ -53,7 +54,7 @@ const Time = ({
                         type="time"
                         step={step}
                         data-date-format="DD MMMM YYYY"
-                        className={`${style ? style : "w-full py-3 px-3"} border bg-backgroundcolor rounded-md text-sm border-bordercolor dark:border-darkbordercolor text-textcolor dark:text-darktextcolor placeholder-placeholdercolor dark:placeholder-darkplaceholdercolor focus:placeholder-placeholdercolor  focus:border-bordercolor focus:outline-hidden focus:ring-0 clearDateInputIcon disabled:text-disabletextcolor disabled:bg-disablebackgroundcolor empty`}
+                        className={`${style ? style : "w-full py-3 px-3"} border rounded-md text-sm border-border text-text placeholder-placeholder focus:placeholder-focus-placeholder  focus:border-focus-border focus:outline-hidden focus:ring-0 clearDateInputIcon disabled:text-disable-text disabled:bg-disable-background empty`}
                         disabled={disabled && disabled}
                         onChange={handleInputChange}
                         {...innerRef}
@@ -63,8 +64,8 @@ const Time = ({
                 <div className="h-4">
                     {error ?
                         <div className="flex items-center space-x-1">
-                            <i className="ri-error-warning-fill text-errorcolor" />
-                            <p className="text-xs text-errorcolor">{error ? error : ""}</p>
+                            <IconAlertTriangleFilled className="text-error" size={12} />
+                            <p className="text-xs text-error">{error ? error : ""}</p>
                         </div>
                         :
                         <></>

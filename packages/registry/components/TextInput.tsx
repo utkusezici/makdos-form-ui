@@ -1,4 +1,4 @@
-import { IconEye, IconEyeOff, IconSearch } from '@tabler/icons-react'
+import { IconAlertTriangleFilled, IconEye, IconEyeOff, IconSearch } from '@tabler/icons-react'
 import { ReactNode, createRef, forwardRef, useEffect, useRef, useState } from 'react'
 export interface ITextInput {
   id?: string
@@ -8,7 +8,7 @@ export interface ITextInput {
   value?: string
   defaultValue?: string
   onChange?: any
-  type?: "text" | "password" | "number" | "domain" | "search"
+  type?: "text" | "password" | "number" | "domain" | "search" | "email"
   required?: boolean
   disabled?: boolean
   min?: number
@@ -45,7 +45,7 @@ const TextInput = ({
   error,
   onKeyUp,
   field,
-
+  
 }: ITextInput) => {
 
   const [changeIcon, setChangeIcon] = useState(true)
@@ -75,12 +75,12 @@ const TextInput = ({
       <div className={`${label ? "space-y-1" : ""} flex flex-col w-full`}>
         <div className="flex items-center space-x-1 w-full">
           {type !== "search" ?
-            <label className={`text-textcolor dark:text-darktextcolor`}>{label ? label : ""}</label>
+            <label className={`text-text`}>{label ? label : ""}</label>
             :
             <></>
           }
           {required &&
-            <span className="text-xs mt-1 text-errorcolor">*</span>
+            <span className="text-xs mt-1 text-error">*</span>
           }
         </div>
         <input
@@ -94,7 +94,7 @@ const TextInput = ({
           max={max && max}
           onChange={handleInputChange}
           disabled={disabled && disabled}
-          className={`${type === "domain" ? `${inputStyle} pl-20 py-3 ` : (leftIcon ? (type === "password" ? "pl-10 pr-10 py-3" : "pl-10 pr-3 py-3") : (inputStyle ? inputStyle : "w-full px-3 py-3"))}  ${type === "search" && "pr-8"} ${error ? "focus:border-errorcolor " : " focus:border-focusbordercolor"} border rounded-lg bg-backgroundcolor dark:bg-darkbackgroundcolor dark:text-darktextcolor dark:border-darkbordercolor border-bordercolor text-textcolor placeholder-placeholdercolor  focus:placeholder-focusplaceholdercolor dark:placeholder:text-placeholdercolor  focus:outline-hidden    disabled:text-disabletextcolor disabled:bg-darkdisablebackgroundcolor `}
+          className={`${type === "domain" ? `${inputStyle} pl-20 py-3 ` : (leftIcon ? (type === "password" ? "pl-10 pr-10 py-3" : "pl-10 pr-3 py-3") : (inputStyle ? inputStyle : "w-full px-3 py-3"))}  ${type === "search" && "pr-8"} ${error ? "focus:border-error " : " focus:border-focus-border"} border rounded-lg  border-border text-text placeholder-placeholder  focus:placeholder-focus-placeholder dark:placeholder:text-placeholder focus:outline-hidden   disabled:text-disable-text disabled:bg-dark-disable-background `}
           {...innerRef}
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
@@ -102,7 +102,7 @@ const TextInput = ({
 
         />
         {leftIcon ?
-          <div className={`absolute left-2 top-[40px] ${isFocus ? "text-focusiconcolor" : "text-iconcolor"} `}>
+          <div className={`absolute left-2 top-[40px] ${isFocus ? "text-focus-icon" : "text-icon"} `}>
             {leftIcon}
           </div>
           :
@@ -111,8 +111,8 @@ const TextInput = ({
         <div className="h-4">
           {error ?
             <div className="flex items-center space-x-1 ">
-              <i className="ri-error-warning-fill text-errorcolor" />
-              <p className="text-xs text-errorcolor">{error ? error : ""}</p>
+              <IconAlertTriangleFilled className="text-error" size={12} />
+              <p className="text-xs text-error">{error ? error : ""}</p>
             </div>
             :
             <></>
@@ -122,7 +122,7 @@ const TextInput = ({
 
       </div>
       {type === "password" ?
-        <div className={`absolute right-2 top-10 ${isFocus ? "text-focusiconcolor" : "text-iconcolor"}`} onClick={() => setChangeIcon(!changeIcon)}>
+        <div className={`absolute right-2 top-10 ${isFocus ? "text-focus-icon" : "text-icon"}`} onClick={() => setChangeIcon(!changeIcon)}>
           {changeIcon ?
             <IconEyeOff />
             :
@@ -145,14 +145,14 @@ const TextInput = ({
       }
       {type === "search" ?
         <div className={`${label ? "top-3.5" : "top-3"} absolute right-2 `}>
-          <IconSearch className={`"text-xl ${isFocus ? "text-focusiconcolor" : "text-iconcolor"}`} />
+          <IconSearch className={`"text-xl ${isFocus ? "text-focus-icon" : "text-icon"}`} />
         </div>
         :
         <></>
       }
       {customIcon ?
         <div className="absolute right-2 top-8">
-          <i className={`"text-xl ${customIcon} ${isFocus ? "text-focusiconcolor" : "text-iconcolor"}`} />
+          <i className={`"text-xl ${customIcon} ${isFocus ? "text-focus-icon" : "text-icon"}`} />
         </div>
         :
         <></>

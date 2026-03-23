@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { IconAlertTriangleFilled } from '@tabler/icons-react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { useDebounce } from 'react-use'
 
 export interface INumeric {
@@ -29,118 +30,86 @@ const Numeric = ({
     onChange,
     required,
     disabled,
-    min = -9999999999999,
-    max = 99999999999999,
+    min = -9999999,
+    max = 9999999,
     style,
     innerRef,
     error,
     field
 }: INumeric) => {
 
-    const [inputValue, setInputValue] = useState<string>(value?.toString() || '');
 
-    // Debounced validation - kullanıcı yazmayı bıraktıktan sonra çalışır
-    useDebounce(
+
+    var [] = useDebounce(
         async () => {
-            // Eğer input boşsa ve bir süre boş kaldıysa min değeri ata
-            if (inputValue === '' || inputValue === null || inputValue === undefined) {
-                const newValue = min >= 0 ? min : 0;
-                setInputValue(newValue.toString());
-                onChange(newValue);
+            if (value <= min) {
+                onChange(Number(min))
                 if (field) {
-                    field.onChange(newValue);
-                }
-                return;
-            }
-
-            const numValue = Number(inputValue);
-
-            // Sayı değilse işlem yapma
-            if (isNaN(numValue)) {
-                return;
-            }
-
-            // Min/Max kontrolü
-            if (numValue < min) {
-                setInputValue(min.toString());
-                onChange(Number(min));
-                if (field) {
-                    field.onChange(Number(min));
-                }
-            } else if (numValue > max) {
-                setInputValue(max.toString());
-                onChange(Number(max));
-                if (field) {
-                    field.onChange(Number(max));
-                }
-            } else {
-                onChange(numValue);
-                if (field) {
-                    field.onChange(numValue);
+                    field.onChange(Number(min))
                 }
             }
         },
-        800, // Biraz daha uzun süre - kullanıcının yazmasını bekle
-        [inputValue, min, max]
+        300,
+        [value]
     );
 
-    // Dış değer değişikliklerini input state'ine yansıt
-    useEffect(() => {
-        if (value !== undefined && value !== null) {
-            setInputValue(value.toString());
-        }
-    }, [value]);
+    var [] = useDebounce(
+        async () => {
+            if (value >= max) {
+                onChange(Number(max))
+                if (field) {
+                    field.onChange(Number(max))
+                }
+            }
+        },
+        300,
+        [value]
+    );
 
-    // Default value için ayrı effect
-    useEffect(() => {
-        if (defaultValue !== undefined && defaultValue !== null && (value === undefined || value === null)) {
-            setInputValue(defaultValue.toString());
+    useEffect(() => { // value değiştiğinde form içerisindeki value yu değiştirmek için
+        if (value) {
             if (field) {
-                field.onChange(defaultValue);
+                field.onChange(value)
             }
         }
-    }, [defaultValue]);
 
-    // Input değişiklik handler'ı
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-
-        // Boş string'i veya sadece sayı karakterlerini kabul et
-        if (newValue === '' || /^-?\d*\.?\d*$/.test(newValue)) {
-            setInputValue(newValue);
+        if (defaultValue) {
+            if (field) {
+                field.onChange(defaultValue)
+            }
         }
-    };
+    }, [value, defaultValue])
 
     return (
         <div className={`relative w-full flex items-center ${style ? style : ""}`}>
             <div className={`${label ? "space-y-1" : ""} flex flex-col w-full`}>
                 <div className="flex items-center space-x-1 w-full">
                     {label &&
-                        <label className="text-labelcolor dark:text-darklabelcolor">{label}</label>
+                        <label className="text-label">{label}</label>
                     }
                     {required &&
-                        <span className="text-xs mt-1 text-errorcolor">*</span>
+                        <span className="text-xs mt-1 text-error">*</span>
                     }
                 </div>
                 <input
                     id={id}
                     name={name}
-                    type="text"
-                    inputMode="numeric"
+                    type={"number"}
                     placeholder={placeholder ? placeholder : ""}
-                    value={inputValue}
+                    value={value && value.toString().replace(/^0+/, '')}
+                    defaultValue={defaultValue && defaultValue}
                     min={min && min}
                     max={max && max}
                     disabled={disabled && disabled}
-                    onChange={handleInputChange}
-                    className={` w-full px-3 py-3 ${error ? "focus:border-errorcolor" : " focus:border-main"} border rounded-lg border-bordercolor bg-white dark:bg-darkbackgroundcolor dark:text-darktextcolor dark:border-darkbordercolor text-textcolor placeholder-placeholdercolor  focus:placeholder-placeholdercolor focus:outline-hidden disabled:cursor-not-allowed disabled:text-disabletextcolor disabled:bg-disablebackgroundcolor `}
+                    onChange={(e) => { onChange(Number(e.target.value)) }}
+                    className={` w-full px-3 py-3 ${error ? "focus:border-error" : " focus:border-main"} border rounded-lg border-border-form text-text placeholder-placeholder  focus:placeholder-placeholder focus:outline-hidden disabled:cursor-not-allowed disabled:text-disable-text disabled:bg-disable-background `}
                     {...innerRef}
                 />
                 <div className="h-4">
                     {error ?
                         <div className="flex items-center space-x-1 ">
-                            <i className="ri-error-warning-fill text-errorcolor" />
-                            <p className="text-xs text-errorcolor">{error ? error : ""}</p>
+                            <IconAlertTriangleFilled className="text-error" size={12} />
+                            <p className="text-xs text-error">{error ? error : ""}</p>
                         </div>
                         :
                         <></>

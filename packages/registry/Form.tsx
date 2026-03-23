@@ -1,3 +1,4 @@
+"use client"
 import { PropsWithChildren, useEffect, useRef } from "react";
 import {
   DefaultValues,
@@ -19,12 +20,12 @@ interface Props<T extends FieldValues = FieldValues> extends PropsWithChildren {
 export type SubmitFunction<T extends FieldValues = FieldValues> = (data: T, isCtrlS: boolean) => void;
 
 function Form<T extends FieldValues = FieldValues>(props: Props<T>) {
-  const localMethods = useForm({ defaultValues: props.defaultValues });
-  const methods = props.methods ?? localMethods;
+  const defaultMethods = useForm({ defaultValues: props.defaultValues });
+  const methods = props.methods ?? defaultMethods;
   const isCtrlS = useRef(false);
 
   useEffect(() => {
-    if (props.defaultValues && !props.resettable) {
+    if (props.defaultValues, !props.resettable) {
       methods.reset(props.defaultValues);
     }
   }, [props.defaultValues, methods]);

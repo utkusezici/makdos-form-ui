@@ -1,3 +1,5 @@
+import { IconAlertTriangleFilled, IconPhone } from '@tabler/icons-react';
+import { forwardRef } from 'react';
 import { default as PhoneInputPackage } from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
@@ -34,13 +36,19 @@ const PhoneInput = ({
 }: IPhoneInput
 ) => {
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (setValue) {
+            setValue(e.target.value); // Input değerini iletebilirsiniz
+        }
+    };
+
     return (
-        <div className={`relative flex items-center ${style && style}`}>
+        <div className={`flex items-center w-full ${style ? style : ""}`}>
             <div className="flex flex-col w-full space-y-1">
                 <div className='flex items-center space-x-1'>
-                    <label className=" text-textcolor dark:text-darktextcolor">{label ? label : ""}</label>
+                    <label className=" text-text">{label ? label : ""}</label>
                     {required &&
-                        <span className="text-xs mt-1 text-errorcolor">*</span>
+                        <span className="text-xs mt-1 text-error">*</span>
                     }
                 </div>
                 <PhoneInputPackage
@@ -49,7 +57,7 @@ const PhoneInput = ({
                     value={value && value}
                     disabled={disabled && disabled}
                     enableSearch={search && search}
-                    onChange={(phone) => setValue && setValue(phone)}
+                    onChange={handleInputChange}
                     enableClickOutside={true}
                     disableSearchIcon
                     autoFormat={true}
@@ -61,18 +69,16 @@ const PhoneInput = ({
                     {...innerRef}
                     {...otherProps}
                     regions={['america', 'europe', 'asia', 'oceania', 'africa']}
-                    inputClass="border pl-14 w-full px-3 py-3 h-auto rounded-md text-textcolor border-bordercolor dark:border-darkbordercolor dark:bg-darkbackgroundcolor dark:text-texttetriary  placeholder-placeholder focus:placeholder-textmain focus:outline-hidden focus:border-placeholder focus:ring-0 font-medium text-sm disabled:text-textsecondary disabled:bg-border"
-                    searchClass="w-full px-3 pl-0 rounded-md dark:border-darkbordercolor dark:bg-darkbackgroundcolor dark:text-texttetriary dark:hover:bg-darkbackgroundcolor"
-                    buttonClass='bg-white border-bordercolor rounded-l-md px-1 dark:border-darkbordercolor dark:bg-darkbackgroundcolor dark:text-texttetriary dark:hover:bg-darkbackgroundcolor  '
-                    dropdownClass='customScroll dark:border-darkbordercolor dark:bg-darkbackgroundcolor dark:text-texttetriary dark:hover:bg-darkbackgroundcolor'
-                    containerClass="phone-input"
-
+                    inputClass="border! w-full! pl-14! px-3 py-3.5! h-auto! rounded-md! text-text! border-border! placeholder-placeholder! focus:placeholder-text-main! focus:outline-hidden! focus:border-placeholder! focus:ring-0! font-medium! text-sm! disabled:text-text-secondary! disabled:bg-border!"
+                    searchClass="w-full! px-3! pl-0! rounded-md!"
+                    buttonClass='bg-white! border-border! rounded-l-md! px-1!'
+                    dropdownClass='customScroll'
                 />
                 <div className="h-4">
                     {error ?
                         <div className="flex items-center space-x-1">
-                            <i className="ri-error-warning-fill text-errorcolor" />
-                            <p className="text-xs text-errorcolor">{error ? error : ""}</p>
+                            <IconAlertTriangleFilled className="text-error" size={12} />
+                            <p className="text-xs text-error">{error ? error : ""}</p>
                         </div>
                         :
                         <></>
@@ -80,9 +86,9 @@ const PhoneInput = ({
                 </div>
             </div>
 
-            <div className="absolute right-2 top-8">
-                <i className="ri-phone-line text-xl text-placeholdercolor" />
-            </div>
+            {/* <div className="absolute right-0 top-8">
+                <IconPhone className="text-placeholder" />
+            </div> */}
         </div>
 
     )

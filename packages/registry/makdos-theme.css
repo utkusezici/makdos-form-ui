@@ -1,0 +1,97 @@
+/*
+  Makdos Form UI — Theme
+  ----------------------
+  Import this file in your global CSS and customize the variables below.
+
+  Tailwind v4:
+    @import "tailwindcss";
+    @import "./makdos-theme.css";
+
+  Tailwind v3 (tailwind.config.js):
+    Add the variables to your @layer base {} block.
+
+  No Tailwind:
+    Just import this file in your main CSS entry point.
+*/
+
+@theme {
+
+  /* Form Element Colors */
+  --color-label:                  #5D646B;
+  --color-error:                  #FC2B36;
+  --color-text:                   #5D646B;
+  --color-placeholder:            #ADB5BD;
+  --color-border:                 #DEE2E6;
+  --color-background-form:        #FFFFFF;
+  --color-icon:                   #ADB5BD;
+  --color-focus-border:           #1958F9;
+  --color-focus-placeholder:      #5D646B;
+  --color-focus-icon:             #5D646B;
+  --color-disable-text:           #CAD0DC;
+  --color-disable-background:     #DEE2E6;
+
+  /* Toggle */
+  --color-toggle-checked:         #1958F9;
+  --color-toggle-unchecked:       #DEE2E6;
+
+  /* SelectBox */
+  --color-selectbox-hover-item:   #DEE2E6;
+
+  /* Primary Button */
+  --color-primary-button-bg:              #1958F9;
+  --color-primary-button-text:            #FFFFFF;
+  --color-primary-button-border:          rgba(0, 0, 0, 0);
+  --color-primary-button-hover-bg:        #0F599A;
+  --color-primary-button-hover-border:    rgba(0, 0, 0, 0);
+  --color-primary-button-hover-text:      #FFFFFF;
+  --color-primary-button-disabled-bg:     #DEE2E6;
+  --color-primary-button-disabled-text:   #868E96;
+  --color-primary-button-disabled-border: rgba(0, 0, 0, 0);
+
+  /* Secondary Button */
+  --color-secondary-button-bg:              #E8EFFF;
+  --color-secondary-button-text:            #1958F9;
+  --color-secondary-button-border:          rgba(0, 0, 0, 0);
+  --color-secondary-button-hover-bg:        #1958F9;
+  --color-secondary-button-hover-border:    rgba(0, 0, 0, 0);
+  --color-secondary-button-hover-text:      #FFFFFF;
+  --color-secondary-button-disabled-bg:     #DEE2E6;
+  --color-secondary-button-disabled-text:   #868E96;
+  --color-secondary-button-disabled-border: rgba(0, 0, 0, 0);
+
+  /* Tertiary Button */
+  --color-tertiary-button-bg:              #FFFFFF;
+  --color-tertiary-button-text:            #343a40;
+  --color-tertiary-button-border:          #E9ECEF;
+  --color-tertiary-button-hover-bg:        #1958F9;
+  --color-tertiary-button-hover-border:    rgba(0, 0, 0, 0);
+  --color-tertiary-button-hover-text:      #FFFFFF;
+  --color-tertiary-button-disabled-bg:     #DEE2E6;
+  --color-tertiary-button-disabled-text:   #868E96;
+  --color-tertiary-button-disabled-border: rgba(0, 0, 0, 0);
+
+  /* Bordered Button */
+  --color-bordered-button-bg:                    rgba(0, 0, 0, 0);
+  --color-bordered-button-text:                  #1958F9;
+  --color-bordered-button-border:                #1958F9;
+  --color-bordered-button-hover-bg:              #0F599A;
+  --color-bordered-button-hover-border:          #0F599A;
+  --color-bordered-button-hover-text:            #FFFFFF;
+  --color-bordered-button-disabled-bg:           rgba(0, 0, 0, 0);
+  --color-bordered-button-disabled-text:         #868E96;
+  --color-bordered-button-disabled-border:       #868E96;
+  --color-bordered-button-disabled-hover-border: #868E96;
+
+  /* Error Button */
+  --color-error-button-bg:                    #FF4D56;
+  --color-error-button-text:                  #FFFFFF;
+  --color-error-button-border:                rgba(0, 0, 0, 0);
+  --color-error-button-hover-bg:              #FFE3E3;
+  --color-error-button-hover-border:          rgba(0, 0, 0, 0);
+  --color-error-button-hover-text:            #FF4D56;
+  --color-error-button-disabled-bg:           #DEE2E6;
+  --color-error-button-disabled-text:         #868E96;
+  --color-error-button-disabled-border:       rgba(0, 0, 0, 0);
+  --color-error-button-disabled-hover-border: rgba(0, 0, 0, 0);
+
+}

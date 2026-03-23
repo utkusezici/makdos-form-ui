@@ -1,3 +1,4 @@
+import { IconAlertTriangleFilled } from '@tabler/icons-react'
 import React, { forwardRef, useEffect, useState } from 'react'
 
 export interface ITextArea {
@@ -66,11 +67,11 @@ const TextArea = ({
     <div className={`flex flex-col space-y-1 ${style && style}`}>
       <div className='flex items-center space-x-1'>
         {label &&
-          <label className=" text-textcolor dark:text-darktextcolor">{label ? label : ""}</label>
+          <label className=" text-text">{label ? label : ""}</label>
         }
 
         {required &&
-          <span className="text-xs mt-1 text-errorcolor">*</span>
+          <span className="text-xs mt-1 text-error">*</span>
         }
       </div>
       <textarea
@@ -84,7 +85,7 @@ const TextArea = ({
         min={min && min}
         max={max && max}
         disabled={disabled && disabled}
-        className={`${inputStyle ? inputStyle : "w-full py-2 px-2"}  ${error ? "focus:border-errorcolor " : " focus:border-focusbordercolor"} border rounded-lg bg-backgroundcolor dark:bg-darkbackgroundcolor dark:text-darktextcolor dark:border-darkbordercolor border-bordercolor text-textcolor placeholder-placeholdercolor  focus:placeholder-focusplaceholdercolor dark:placeholder:text-placeholdercolor  focus:outline-hidden    disabled:text-disabletextcolor disabled:bg-darkdisablebackgroundcolor `}
+        className={`${inputStyle ? inputStyle : "w-full py-2 px-2"}  ${error ? "focus:border-error " : " focus:border-focus-border"} border rounded-lg border-border-form text-text placeholder-placeholder  focus:placeholder-focus-placeholder focus:outline-hidden disabled:text-disable-text disabled:bg-disable-background `}
         {...change}
         {...innerRef}
         onKeyPress={onKeyPress && onKeyPress}
@@ -93,8 +94,8 @@ const TextArea = ({
       <div className={`${ticketDetails ? '' : 'h-4'}`}>
         {error ?
           <div className="flex items-center space-x-1">
-            <i className="ri-error-warning-fill text-errorcolor" />
-            <p className="text-xs text-errorcolor">{error ? error : ""}</p>
+            <IconAlertTriangleFilled className="text-error" size={12} />
+            <p className="text-xs text-error">{error ? error : ""}</p>
           </div>
           :
           <></>

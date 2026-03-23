@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
 import CheckBox from './CheckBox'
-import { IconChevronDown, IconPlus, IconSearch, IconX } from '@tabler/icons-react'
+import { IconChevronDown, IconSearch, IconX } from '@tabler/icons-react'
 import { useFormContext } from 'react-hook-form'
 
 export interface ISelectBox {
@@ -14,7 +14,6 @@ export interface ISelectBox {
     defaultSelect?: any,
     style?: string,
     search?: boolean,
-    searchAndAdd?: any,
     placeholder?: string,
     onChange?: any,
     paginate?: boolean,
@@ -40,7 +39,6 @@ const SelectBox = ({
     defaultSelect,
     style,
     search,
-    searchAndAdd,
     placeholder,
     onChange,
     paginate = false,
@@ -172,14 +170,9 @@ const SelectBox = ({
         }
 
         let selectedItemList = items.filter((x: any) => x?.checked)
-        if (multiSelect && items && JSON.stringify(selectedItemList) !== JSON.stringify(selectedItems)) {
+        if (multiSelect && items && JSON.stringify(selectedItemList) !== JSON.stringify(selectedItems)) { //listede check olanlar sayfa yüklendiği zaman seçilsin diye
             setSelectedItems(selectedItemList)
-            if (field) {
-                field.onChange(selectedItemList)
-            }
-            if (formSelectBox && setValue) {
-                setValue(name, selectedItemList)
-            }
+
         }
     }, [formDefaultValue, items])
 
@@ -232,31 +225,31 @@ const SelectBox = ({
         <div ref={wrapperRef} className={`relative ${style ? style : ""}`}>
             <div className="flex space-x-1 w-full ">
                 {label &&
-                    <span className="mb-1 text-textcolor dark:text-darktextcolor">{label ? label : "Dummy"}</span>
+                    <span className="mb-1 text-text">{label ? label : "Dummy"}</span>
                 }
                 {required &&
-                    <span className="text-xs mt-1 text-errorcolor">*</span>
+                    <span className="text-xs mt-1 text-error">*</span>
                 }
             </div>
-            <div className={`${enter ? " border-focusbordercolor" : "border-bordercolor"} ${paginate ? "h-10" : "py-3.5"} border rounded-lg items-center   flex justify-between cursor-pointer ${disabled ? "bg-disablebackgroundcolor" : "bg-backgroundcolor dark:border-darkbordercolor dark:bg-darkinputbackground dark:text-darktextcolor"}`}
+            <div className={`${enter ? " border-focus-border" : "border-border"} ${paginate ? "h-10" : "py-3.5"} border rounded-lg items-center flex justify-between  ${disabled ? "bg-disable-background cursor-not-allowed" : "cursor-pointer"}`}
                 onClick={() => {
                     !disabled && setEnter(!enter)
                     !disabled && setOpenMenu(!openMenu)
                 }}>
                 <div className='flex items-center'>
                     {!selectedItems ?
-                        <p className="pl-3 text-placeholdercolor font-medium text-sm ">{placeholder && placeholder}</p>
+                        <p className="pl-3 text-placeholder font-medium text-sm ">{placeholder && placeholder}</p>
                         :
                         (selectedItems?.text ?
-                            <p className="pl-3 text-textcolor whitespace-nowrap text-sm dark:text-darktextcolor">{selectedItems?.text}</p>
+                            <p className="pl-3 text-text whitespace-nowrap text-sm">{selectedItems?.text}</p>
                             :
                             selectedItems?.map((item: any, i: number) => (
                                 <div className='flex items-center' key={i} >
 
-                                    <p className="pl-3 text-textcolor whitespace-nowrap text-sm dark:text-darktextcolor">{item?.text}</p>
+                                    <p className="pl-3 text-text whitespace-nowrap text-sm">{item?.text}</p>
                                     {
                                         i !== selectedItems?.length - 1 &&
-                                        <p className=" text-textcolor whitespace-nowrap text-sm dark:text-darktextcolor">, </p>
+                                        <p className=" text-text whitespace-nowrap text-sm">, </p>
                                     }
                                 </div>
 
@@ -265,35 +258,29 @@ const SelectBox = ({
                     }
 
                 </div>
-                <IconChevronDown size={18} className="mr-3 text-textcolor" />
+                <IconChevronDown size={18} className="mr-3 text-text" />
             </div>
 
             {openMenu && items?.length > 0 &&
-                <div className={`${search ? "" : "border"} ${paginate ? "bottom-[50px]" : "mt-2"} absolute border-bordercolor dark:border-darkbordercolor rounded-md w-full z-50`} >
+                <div className={`${search ? "" : "border"} ${paginate ? "bottom-[50px]" : "mt-2"} absolute border-border rounded-md w-full z-50 bg-white`} >
                     {search &&
                         <div className="relative flex">
-                            <input autoFocus value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder="Search" className="w-full py-2 pl-2 pr-6 bg-backgroundcolor border rounded-t-lg outline-hidden dark:border-darkbordercolor dark:bg-darkinputbackground dark:text-darktextcolor border-bordercolor text-textcolor" />
+                            <input autoFocus onChange={(e) => setSearchInput(e.target.value)} placeholder="Search" className="w-full py-2 pl-2 pr-6 border rounded-t-lg outline-hidden border-border text-text" />
                             <div className="absolute right-3 top-3">
                                 {searchInput.length > 1 ?
-                                    <div className='flex items-center space-x-2'>
-                                        <IconX size={18} className=" cursor-pointer  text-textcolor" onClick={() => setSearchInput("")} />
-                                        {
-                                            searchAndAdd &&
-                                            <IconPlus onClick={() => { searchAndAdd(searchInput); setSearchInput("") }} size={18} className=" cursor-pointer  text-textcolor" />
-                                        }
-                                    </div>
+                                    <IconX size={18} className=" cursor-pointer  text-text" onClick={() => setSearchInput("")} />
                                     :
-                                    <IconSearch size={18} className=" text-textcolor" />
+                                    <IconSearch size={18} className=" text-text" />
                                 }
                             </div>
                         </div>
                     }
-                    <div className={`${search ? "border-b border-l border-r rounded-b-md border-bordercolor " : "rounded-md"} max-h-[150px] customScroll dark:border-darkbordercolor dark:bg-darkinputbackground dark:text-darktextcolor bg-backgroundcolor overflow-y-auto `}>
+                    <div className={`${search ? "border-b border-l border-r rounded-b-md border-border " : "rounded-md"} max-h-[150px] customScroll overflow-y-auto `}>
                         {items?.filter((x: any) => x.text?.toLowerCase().includes(searchInput.toLowerCase())).map((item: any, i: number) =>
                             <div id={`selectbox-item-${i}`}
-                                className={` flex flex-col duration-200 cursor-pointer hover:bg-selectboxhoveritembg dark:hover:bg-darkselectboxhoveritembg ${activeIndex === i ? 'bg-selectboxhoveritembg dark:bg-darkselectboxhoveritembg' : ''}`} key={i} onClick={() => { selectItem(item); formClickTriggerFunction && formClickTriggerFunction(item) }} >
+                                className={` flex flex-col duration-200 cursor-pointer hover:bg-selectbox-hover-item ${activeIndex === i ? 'bg-selectbox-hover-item' : ''}`} key={i} onClick={() => { selectItem(item); formClickTriggerFunction && formClickTriggerFunction(item) }} >
                                 {i !== 0 &&
-                                    <div className="w-full border-b border-bordercolor dark:border-darkbordercolor" />
+                                    <div className="w-full border-b border-border" />
                                 }
                                 <div className="flex items-center px-2 py-2 space-x-2">
                                     {multiSelect &&
@@ -312,12 +299,12 @@ const SelectBox = ({
                                             {item.icon &&
                                                 <p>{item.icon}</p>
                                             }
-                                            <p className="text-sm font-medium text-textcolor dark:text-darktextcolor">
+                                            <p className="text-sm font-medium text-text">
                                                 {item?.text}
                                             </p>
                                         </div>
                                         {price &&
-                                            <p className="text-sm font-medium text-textcolor dark:text-darktextcolor">
+                                            <p className="text-sm font-medium text-text">
                                                 {item?.otherInfo?.price} $
                                             </p>
 
@@ -334,8 +321,8 @@ const SelectBox = ({
             <div className="h-3 mt-0.5">
                 {errorView ?
                     <div className="flex items-center space-x-1 ">
-                        <i className="ri-error-warning-fill text-errorcolor" />
-                        <p className="text-xs text-errorcolor">{error ? error?.message : ""}</p>
+                        <i className="ri-error-warning-fill text-error" />
+                        <p className="text-xs text-error">{error ? error?.message : ""}</p>
                     </div>
                     :
                     <></>

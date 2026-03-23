@@ -1,6 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import CheckBox from './CheckBox'
-import { set } from 'local-storage'
 import { IconArrowBigDownLine, IconChevronDown } from '@tabler/icons-react'
 import { useFormContext } from 'react-hook-form'
 
@@ -51,10 +50,10 @@ const SelectBoxGroup = ({
     disabled = false,
     field
 }: ISelectBoxGroup) => {
+    const formContext = useFormContext();
     let setValue: any, watch: any;
 
     if (formSelectBox) {
-        const formContext = useFormContext();
         setValue = formContext.setValue;
         watch = formContext.watch;
     }
@@ -173,55 +172,55 @@ const SelectBoxGroup = ({
         <div ref={wrapperRef} className={`relative ${style ? style : ""}`}>
             <div className="flex space-x-1 w-full ">
                 {label &&
-                    <span className="mb-1 text-labelcolor dark:text-darklabelcolor">{label ? label : "Dummy"}</span>
+                    <span className="mb-1 text-labelcolor">{label ? label : "Dummy"}</span>
                 }
                 {required &&
-                    <span className="text-xs mt-1 text-errorcolor">*</span>
+                    <span className="text-xs mt-1 text-error">*</span>
                 }
             </div>
-            <div className={`${enter ? "ring-4 ring-blue-100 border-main" : "border-bordercolor"} ${paginate ? "h-10" : "py-3.5"} border rounded-lg items-center   flex justify-between cursor-pointer ${disabled ? "bg-disablebackgroundcolor dark:bg-darkdisablebackgroundcolor" : "bg-backgroundcolor"}`}
+            <div className={`${enter ? "ring-4 ring-blue-100 border-main" : "border-bordercolor"} ${paginate ? "h-10" : "py-3.5"} border rounded-lg items-center   flex justify-between cursor-pointer ${disabled ? "bg-disablebackgroundcolor" : "bg-backgroundcolor"}`}
                 onClick={() => {
                     !disabled && setEnter(!enter)
                     !disabled && setOpenMenu(!openMenu)
                 }}>
                 <div>
                     {!selectedItems ?
-                        <p className="pl-3 text-placeholdercolor dark:text-darkplaceholdercolor font-medium text-sm ">{placeholder && placeholder}</p>
+                        <p className="pl-3 text-placeholdercolor font-medium text-sm ">{placeholder && placeholder}</p>
                         :
-                        <p className="pl-3 text-textcolor dark:text-darktextcolor whitespace-nowrap text-sm">{selectedItems?.text}</p>
+                        <p className="pl-3 text-textcolor whitespace-nowrap text-sm">{selectedItems?.text}</p>
                     }
                 </div>
-                <IconChevronDown size={18} className="mr-3 text-textcolor dark:text-darktextcolor" />
+                <IconChevronDown size={18} className="mr-3 text-textcolor" />
             </div>
 
             {openMenu && items?.length > 0 &&
-                <div className={`${search ? "" : "border"} ${paginate ? "bottom-[50px]" : "mt-2"} absolute border-bordercolor dark:border-darkbordercolor rounded-md w-full z-50`} >
+                <div className={`${search ? "" : "border"} ${paginate ? "bottom-[50px]" : "mt-2"} absolute border-bordercolor rounded-md w-full z-50`} >
                     {search &&
                         <div className="relative flex">
-                            <input autoFocus onChange={(e) => setSearchInput(e.target.value)} placeholder="Search" className="w-full py-2 pl-2 pr-6 bg-backgroundcolor dark:bg-darkbackgroundcolor border rounded-t-lg outline-hidden border-bordercolor dark:border-darkbordercolor text-textcolor dark:text-darktextcolor" />
+                            <input autoFocus onChange={(e) => setSearchInput(e.target.value)} placeholder="Search" className="w-full py-2 pl-2 pr-6 bg-backgroundcolor border rounded-t-lg outline-hidden border-bordercolor text-textcolor" />
                             <div className="absolute right-2 top-2">
                                 {searchInput.length > 1 ?
-                                    <i className="text-xl cursor-pointer ri-close-line text-textcolor dark:text-darktextcolor" onClick={() => setSearchInput("")} />
+                                    <i className="text-xl cursor-pointer ri-close-line text-textcolor" onClick={() => setSearchInput("")} />
                                     :
-                                    <i className="text-xl ri-search-line text-textcolor dark:text-darktextcolor" />
+                                    <i className="text-xl ri-search-line text-textcolor" />
                                 }
                             </div>
                         </div>
                     }
-                    <div className={`${search ? "border-b border-l border-r rounded-b-md border-bordercolor dark:border-darkbordercolor " : "rounded-md"} max-h-[200px] customScroll  bg-backgroundcolor dark:bg-darkbackgroundcolor overflow-y-auto `}>
+                    <div className={`${search ? "border-b border-l border-r rounded-b-md border-bordercolor " : "rounded-md"} max-h-[200px] customScroll  bg-backgroundcolor overflow-y-auto `}>
                         {items.map((groupItem: any, index: number) =>
                             <div key={index}>
                                 {index !== 0 &&
-                                    <div className="w-full border-b border-bordercolor dark:border-darkbordercolor" />
+                                    <div className="w-full border-b border-bordercolor" />
                                 }
 
                                 <div className="p-2">
-                                    <p className="text-sm font-bold text-textcolor dark:text-darktextcolor mb-2">
+                                    <p className="text-sm font-bold text-textcolor mb-2">
                                         {groupItem?.group}
                                     </p>
 
                                     {groupItem.items?.filter((x: any) => x.text?.toLowerCase().includes(searchInput.toLowerCase())).map((item: any, i: number) =>
-                                        <div className="flex flex-col duration-200 cursor-pointer hover:bg-selectboxhoveritembg dark:hover:bg-darkselectboxhoveritembg " key={i} onClick={() => { selectItem(item); formClickTriggerFunction && formClickTriggerFunction(item) }} >
+                                        <div className="flex flex-col duration-200 cursor-pointer hover:bg-selectboxhoveritembg " key={i} onClick={() => { selectItem(item); formClickTriggerFunction && formClickTriggerFunction(item) }} >
                                             {i !== 0 &&
                                                 <div className="w-full border-b border-backgroundcolor" />
                                             }
@@ -262,8 +261,8 @@ const SelectBoxGroup = ({
             <div className="h-3 mt-0.5">
                 {errorView ?
                     <div className="flex items-center space-x-1 ">
-                        <i className="ri-error-warning-fill text-errorcolor" />
-                        <p className="text-xs text-errorcolor">{error ? error?.message : ""}</p>
+                        <i className="ri-error-warning-fill text-error" />
+                        <p className="text-xs text-error">{error ? error?.message : ""}</p>
                     </div>
                     :
                     <></>
