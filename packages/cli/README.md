@@ -15,7 +15,15 @@ npx @makdosdev/form-ui add FormTextInput FormSelectBox FormCheckBox
 npx @makdosdev/form-ui list
 ```
 
-Components are copied directly into your project under `src/components/ui/` by default. You can change the destination:
+Components are copied directly into your project under `src/components/FormElements/` by default. You can configure this by editing `makdos.config.json` (created automatically on `init`):
+
+```json
+{
+  "path": "src/components/FormElements"
+}
+```
+
+Or override it once with the `--path` flag:
 
 ```bash
 npx @makdosdev/form-ui add FormTextInput --path src/components/forms

@@ -20,7 +20,7 @@ program
 program
   .command("add [components...]")
   .description("Add components to your project")
-  .option("-p, --path <path>", "destination path for components", "src/components/ui")
+  .option("-p, --path <path>", "destination path for components (overrides makdos.config.json)")
   .action(add);
 
 program

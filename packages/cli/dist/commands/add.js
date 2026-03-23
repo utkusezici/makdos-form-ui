@@ -58,6 +58,18 @@ function detectPackageManager() {
     catch { }
     return "npm";
 }
+function getConfigPath() {
+    const configFile = path.resolve(process.cwd(), "makdos.config.json");
+    if (fs.existsSync(configFile)) {
+        try {
+            const config = JSON.parse(fs.readFileSync(configFile, "utf-8"));
+            if (config.path)
+                return config.path;
+        }
+        catch { }
+    }
+    return "src/components/FormElements";
+}
 export async function add(components, options) {
     if (components.length === 0) {
         console.log(chalk.yellow("\nNo components specified."));
@@ -65,7 +77,7 @@ export async function add(components, options) {
         console.log(chalk.gray("List:  npx @makdosdev/form-ui list\n"));
         return;
     }
-    const destPath = path.resolve(process.cwd(), options.path);
+    const destPath = path.resolve(process.cwd(), options.path ?? getConfigPath());
     const installed = new Set();
     const npmDepsToInstall = new Set();
     console.log(chalk.bold(`\nAdding components to ${chalk.cyan(options.path)}\n`));

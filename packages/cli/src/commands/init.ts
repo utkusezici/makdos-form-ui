@@ -21,10 +21,18 @@ export async function init() {
 
     spinner.succeed("makdos-theme.css created");
 
+    // makdos.config.json oluştur (yoksa)
+    const configPath = path.resolve(process.cwd(), "makdos.config.json");
+    if (!await fs.pathExists(configPath)) {
+      await fs.writeFile(configPath, JSON.stringify({ path: "src/components/FormElements" }, null, 2), "utf-8");
+      console.log(chalk.green("✓ makdos.config.json created"));
+    }
+
     console.log(chalk.bold("\nNext step — import it in your global CSS:\n"));
     console.log(chalk.cyan('  @import "tailwindcss";'));
     console.log(chalk.cyan('  @import "./makdos-theme.css";'));
-    console.log(chalk.gray("\nYou can now customize the colors in makdos-theme.css.\n"));
+    console.log(chalk.gray("\nYou can now customize the colors in makdos-theme.css."));
+    console.log(chalk.gray("Edit makdos.config.json to change the components destination path.\n"));
   } catch (err) {
     spinner.fail("Something went wrong.");
     console.error(chalk.red((err as Error).message));
