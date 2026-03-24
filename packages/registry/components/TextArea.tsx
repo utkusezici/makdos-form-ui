@@ -85,7 +85,7 @@ const TextArea = ({
         min={min && min}
         max={max && max}
         disabled={disabled && disabled}
-        className={`${inputStyle ? inputStyle : "w-full py-2 px-2"}  ${error ? "focus:border-error " : " focus:border-focus-border"} border rounded-lg border-border-form text-text placeholder-placeholder  focus:placeholder-focus-placeholder focus:outline-hidden disabled:text-disable-text disabled:bg-disable-background `}
+        className={`${inputStyle ? inputStyle : "w-full py-2 px-2"}  ${error ? "focus:border-error " : " focus:border-focus-border"} border rounded-lg bg-background-form border-border text-text placeholder-placeholder  focus:placeholder-focus-placeholder focus:outline-hidden disabled:text-disable-text disabled:bg-disable-background `}
         {...change}
         {...innerRef}
         onKeyPress={onKeyPress && onKeyPress}

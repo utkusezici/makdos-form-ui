@@ -119,19 +119,19 @@ function Paginate({ pageTotal, pageLimit, onPageLimitChange }: Props) {
             <div className="flex justify-end ">
                 <ReactPaginate
                     breakLabel="..."
-                    nextLabel={<IconChevronRight size={20} className='text-textmain dark:text-darktexttitle' />}
+                    nextLabel={<IconChevronRight size={20} className='text-textmain' />}
                     onPageChange={handlePageClick}
                     pageRangeDisplayed={width ? (width > 500 ? 2 : 1) : 2}
                     marginPagesDisplayed={width ? (width > 500 ? 3 : 1) : 3}
                     pageCount={pageCount}
-                    previousLabel={<IconChevronLeft size={20} className='text-textmain dark:text-darktexttitle' />}
+                    previousLabel={<IconChevronLeft size={20} className='text-textmain' />}
                     className="flex items-center justify-center transparent "
-                    nextClassName="flex rounded-lg bg-white dark:bg-texttitle text-textmain dark:border-transparent w-8 h-8  hover:text-main justify-center items-center  font-semibold border border-bordercolor cursor-pointer"
-                    previousClassName="flex rounded-lg bg-white dark:bg-texttitle text-textmain dark:border-transparent w-8 h-8  hover:text-main justify-center items-center  font-semibold border border-bordercolor cursor-pointer"
-                    pageLinkClassName="bg-white dark:bg-texttitle dark:text-darktexttitle dark:border-transparent mr-1.5 ml-1.5 py-2  w-8 h-8  text-xs rounded-lg flex justify-center items-center font-semibold border border-bordercolor cursor-pointer"
+                    nextClassName="flex rounded-lg bg-white text-textmain w-8 h-8  hover:text-main justify-center items-center  font-semibold border border-bordercolor cursor-pointer"
+                    previousClassName="flex rounded-lg bg-white text-textmain w-8 h-8  hover:text-main justify-center items-center  font-semibold border border-bordercolor cursor-pointer"
+                    pageLinkClassName="bg-white text-textmain mr-1.5 ml-1.5 py-2  w-8 h-8  text-xs rounded-lg flex justify-center items-center font-semibold border border-bordercolor cursor-pointer"
                     breakClassName="text-textmain hover:text-main "
                     pageClassName="flex text-textmain hover:text-main cursor-pointer"
-                    activeLinkClassName="bg-white dark:text-white mr-1.5 ml-1.5 py-2 text-main w-8 h-8  text-sm rounded-lg flex justify-center items-center font-semibold border border-bordercolor"
+                    activeLinkClassName="bg-white mr-1.5 ml-1.5 py-2 text-main w-8 h-8  text-sm rounded-lg flex justify-center items-center font-semibold border border-bordercolor"
                     forcePage={selected - 1}
                 />
             </div>

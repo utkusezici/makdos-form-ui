@@ -231,7 +231,7 @@ const SelectBox = ({
                     <span className="text-xs mt-1 text-error">*</span>
                 }
             </div>
-            <div className={`${enter ? " border-focus-border" : "border-border"} ${paginate ? "h-10" : "py-3.5"} border rounded-lg items-center flex justify-between  ${disabled ? "bg-disable-background cursor-not-allowed" : "cursor-pointer"}`}
+            <div className={`${enter ? " border-focus-border" : "border-border"} ${paginate ? "h-10" : "py-3.5"} border rounded-lg items-center flex justify-between  ${disabled ? "bg-disable-background cursor-not-allowed" : "bg-background-form cursor-pointer"}`}
                 onClick={() => {
                     !disabled && setEnter(!enter)
                     !disabled && setOpenMenu(!openMenu)

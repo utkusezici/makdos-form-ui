@@ -102,7 +102,7 @@ const Numeric = ({
                     max={max && max}
                     disabled={disabled && disabled}
                     onChange={(e) => { onChange(Number(e.target.value)) }}
-                    className={` w-full px-3 py-3 ${error ? "focus:border-error" : " focus:border-main"} border rounded-lg border-border-form text-text placeholder-placeholder  focus:placeholder-placeholder focus:outline-hidden disabled:cursor-not-allowed disabled:text-disable-text disabled:bg-disable-background `}
+                    className={` w-full px-3 py-3 ${error ? "focus:border-error" : " focus:border-main"} border rounded-lg bg-background-form border-border text-text placeholder-placeholder  focus:placeholder-placeholder focus:outline-hidden disabled:cursor-not-allowed disabled:text-disable-text disabled:bg-disable-background `}
                     {...innerRef}
                 />
                 <div className="h-4">

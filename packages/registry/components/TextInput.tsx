@@ -95,7 +95,7 @@ const TextInput = ({
           max={max && max}
           onChange={handleInputChange}
           disabled={disabled && disabled}
-          className={`${type === "domain" ? `${inputStyle} pl-20 py-3 ` : (leftIcon ? (type === "password" ? "pl-10 pr-10 py-3" : "pl-10 pr-3 py-3") : (inputStyle ? inputStyle : "w-full px-3 py-3"))}  ${type === "search" && "pr-8"} ${error ? "focus:border-error " : " focus:border-focus-border"} border rounded-lg  border-border text-text placeholder-placeholder  focus:placeholder-focus-placeholder dark:placeholder:text-placeholder focus:outline-hidden   disabled:text-disable-text disabled:bg-dark-disable-background `}
+          className={`${type === "domain" ? `${inputStyle} pl-20 py-3 ` : (leftIcon ? (type === "password" ? "pl-10 pr-10 py-3" : "pl-10 pr-3 py-3") : (inputStyle ? inputStyle : "w-full px-3 py-3"))}  ${type === "search" && "pr-8"} ${error ? "focus:border-error " : " focus:border-focus-border"} border rounded-lg bg-background-form border-border text-text placeholder-placeholder  focus:placeholder-focus-placeholder focus:outline-hidden   disabled:text-disable-text disabled:bg-disable-background`}
           {...innerRef}
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
