@@ -158,9 +158,11 @@ Open `makdos-theme.css` and change any variable:
 | `--color-text` | `#5D646B` | Input text, dropdown text |
 | `--color-placeholder` | `#ADB5BD` | Input placeholders |
 | `--color-border` | `#DEE2E6` | Input borders |
+| `--color-background-form` | `#FFFFFF` | Input background |
 | `--color-error` | `#FC2B36` | Error messages, error borders |
 | `--color-icon` | `#ADB5BD` | Input icons (default state) |
 | `--color-focus-border` | `#1958F9` | Input border on focus |
+| `--color-focus-placeholder` | `#5D646B` | Input placeholder on focus |
 | `--color-focus-icon` | `#5D646B` | Input icon on focus |
 | `--color-disable-text` | `#CAD0DC` | Disabled input text |
 | `--color-disable-background` | `#DEE2E6` | Disabled input background |
