@@ -8,6 +8,9 @@ import registryData from "../registry.json";
 const REGISTRY_BASE_URL =
   "https://raw.githubusercontent.com/utkusezici/makdos-form-ui/main/packages/registry";
 
+const THEME_URL =
+  "https://raw.githubusercontent.com/utkusezici/makdos-form-ui/main/packages/registry/makdos-theme.css";
+
 type RegistryItem = {
   files: string[];
   npmDependencies: string[];
@@ -113,6 +116,20 @@ export async function add(components: string[], options: { path?: string }) {
     }
 
     spinner.stop();
+
+    // makdos-theme.css yoksa otomatik oluştur
+    const themePath = path.resolve(process.cwd(), "makdos-theme.css");
+    if (!await fs.pathExists(themePath)) {
+      const themeSpinner = ora("Creating makdos-theme.css...").start();
+      const themeRes = await fetch(THEME_URL);
+      if (themeRes.ok) {
+        await fs.writeFile(themePath, await themeRes.text(), "utf-8");
+        themeSpinner.succeed("makdos-theme.css created");
+        console.log(chalk.gray('  → Import it in your global CSS: @import "./makdos-theme.css"'));
+      } else {
+        themeSpinner.warn("Could not fetch makdos-theme.css, run 'npx @makdosdev/form-ui init' manually");
+      }
+    }
 
     for (const name of components) {
       console.log(chalk.bold(`\n${name}:`));

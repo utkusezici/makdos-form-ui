@@ -8455,6 +8455,7 @@ var registry_default = {
 
 // src/commands/add.ts
 var REGISTRY_BASE_URL = "https://raw.githubusercontent.com/utkusezici/makdos-form-ui/main/packages/registry";
+var THEME_URL = "https://raw.githubusercontent.com/utkusezici/makdos-form-ui/main/packages/registry/makdos-theme.css";
 var typedRegistry = registry_default;
 async function fetchFile(filePath) {
   const url = `${REGISTRY_BASE_URL}/${filePath}`;
@@ -8532,6 +8533,18 @@ Adding components to ${source_default.cyan(options.path ?? getConfigPath())}
       }
     }
     spinner.stop();
+    const themePath = import_path.default.resolve(process.cwd(), "makdos-theme.css");
+    if (!await import_fs_extra.default.pathExists(themePath)) {
+      const themeSpinner = ora("Creating makdos-theme.css...").start();
+      const themeRes = await fetch(THEME_URL);
+      if (themeRes.ok) {
+        await import_fs_extra.default.writeFile(themePath, await themeRes.text(), "utf-8");
+        themeSpinner.succeed("makdos-theme.css created");
+        console.log(source_default.gray('  \u2192 Import it in your global CSS: @import "./makdos-theme.css"'));
+      } else {
+        themeSpinner.warn("Could not fetch makdos-theme.css, run 'npx @makdosdev/form-ui init' manually");
+      }
+    }
     for (const name of components) {
       console.log(source_default.bold(`
 ${name}:`));
@@ -8575,12 +8588,45 @@ Usage: npx @makdosdev/form-ui add <component>
 // src/commands/init.ts
 var import_fs_extra2 = __toESM(require_lib());
 var import_path2 = __toESM(require("path"));
-var THEME_URL = "https://raw.githubusercontent.com/utkusezici/makdos-form-ui/main/packages/registry/makdos-theme.css";
+var import_child_process2 = require("child_process");
+var THEME_URL2 = "https://raw.githubusercontent.com/utkusezici/makdos-form-ui/main/packages/registry/makdos-theme.css";
+function detectPackageManager2() {
+  try {
+    if (import_fs_extra2.default.existsSync("bun.lockb")) return "bun";
+    if (import_fs_extra2.default.existsSync("pnpm-lock.yaml")) return "pnpm";
+    if (import_fs_extra2.default.existsSync("yarn.lock")) return "yarn";
+  } catch {
+  }
+  return "npm";
+}
+function detectFramework() {
+  try {
+    const pkgPath = import_path2.default.resolve(process.cwd(), "package.json");
+    if (!import_fs_extra2.default.existsSync(pkgPath)) return "unknown";
+    const pkg = JSON.parse(import_fs_extra2.default.readFileSync(pkgPath, "utf-8"));
+    const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
+    if ("next" in allDeps) return "nextjs";
+    if ("vite" in allDeps) return "vite";
+  } catch {
+  }
+  return "unknown";
+}
+function isTailwindInstalled() {
+  try {
+    const pkgPath = import_path2.default.resolve(process.cwd(), "package.json");
+    if (!import_fs_extra2.default.existsSync(pkgPath)) return false;
+    const pkg = JSON.parse(import_fs_extra2.default.readFileSync(pkgPath, "utf-8"));
+    const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
+    return "tailwindcss" in allDeps;
+  } catch {
+    return false;
+  }
+}
 async function init() {
   console.log(source_default.bold("\nInitializing Makdos Form UI...\n"));
   const spinner = ora("Fetching theme file...").start();
   try {
-    const res = await fetch(THEME_URL);
+    const res = await fetch(THEME_URL2);
     if (!res.ok) throw new Error(`Failed to fetch theme: ${res.statusText}`);
     const content = await res.text();
     const destPath = import_path2.default.resolve(process.cwd(), "makdos-theme.css");
@@ -8591,10 +8637,40 @@ async function init() {
       await import_fs_extra2.default.writeFile(configPath, JSON.stringify({ path: "src/components/FormElements" }, null, 2), "utf-8");
       console.log(source_default.green("\u2713 makdos.config.json created"));
     }
-    console.log(source_default.bold("\nNext step \u2014 import it in your global CSS:\n"));
+    const framework = detectFramework();
+    const pm = detectPackageManager2();
+    if (!isTailwindInstalled()) {
+      if (framework === "nextjs") {
+        const installCmd = pm === "yarn" ? "yarn add -D tailwindcss @tailwindcss/postcss postcss" : pm === "pnpm" ? "pnpm add -D tailwindcss @tailwindcss/postcss postcss" : pm === "bun" ? "bun add -D tailwindcss @tailwindcss/postcss postcss" : "npm install -D tailwindcss @tailwindcss/postcss postcss";
+        const twSpinner = ora("Installing Tailwind CSS...").start();
+        (0, import_child_process2.execSync)(installCmd, { stdio: "ignore" });
+        twSpinner.succeed("Tailwind CSS installed");
+        const postcssPath = import_path2.default.resolve(process.cwd(), "postcss.config.mjs");
+        if (!import_fs_extra2.default.existsSync(postcssPath)) {
+          await import_fs_extra2.default.writeFile(postcssPath, `export default {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+`, "utf-8");
+          console.log(source_default.green("\u2713 postcss.config.mjs created"));
+        }
+      } else {
+        const installCmd = pm === "yarn" ? "yarn add -D tailwindcss @tailwindcss/vite" : pm === "pnpm" ? "pnpm add -D tailwindcss @tailwindcss/vite" : pm === "bun" ? "bun add -D tailwindcss @tailwindcss/vite" : "npm install -D tailwindcss @tailwindcss/vite";
+        const twSpinner = ora("Installing Tailwind CSS...").start();
+        (0, import_child_process2.execSync)(installCmd, { stdio: "ignore" });
+        twSpinner.succeed("Tailwind CSS installed");
+        console.log(source_default.bold("\nAdd the Tailwind plugin to your vite.config.ts:\n"));
+        console.log(source_default.cyan('  import tailwindcss from "@tailwindcss/vite"'));
+        console.log(source_default.cyan("  plugins: [react(), tailwindcss()]"));
+      }
+    } else {
+      console.log(source_default.gray("\u2713 Tailwind CSS already installed"));
+    }
+    console.log(source_default.bold("\nImport the theme in your global CSS (e.g. src/index.css or app/globals.css):\n"));
     console.log(source_default.cyan('  @import "tailwindcss";'));
     console.log(source_default.cyan('  @import "./makdos-theme.css";'));
-    console.log(source_default.gray("\nYou can now customize the colors in makdos-theme.css."));
+    console.log(source_default.gray("\nYou can customize colors in makdos-theme.css."));
     console.log(source_default.gray("Edit makdos.config.json to change the components destination path.\n"));
   } catch (err) {
     spinner.fail("Something went wrong.");

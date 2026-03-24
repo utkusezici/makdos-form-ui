@@ -2,20 +2,55 @@
 
 A CLI-first React form component library built on React Hook Form + Tailwind CSS. Add components directly to your project — own the code, customize freely.
 
-## Usage
+## Getting Started
+
+### 1. Initialize
+
+Run the init command in your project root. This sets up Tailwind CSS (if not already installed), creates `makdos-theme.css`, and generates `makdos.config.json`.
 
 ```bash
-# Add a component
-npx @makdosdev/form-ui add FormTextInput
-
-# Add multiple components
-npx @makdosdev/form-ui add FormTextInput FormSelectBox FormCheckBox
-
-# List all available components
-npx @makdosdev/form-ui list
+npx @makdosdev/form-ui init
 ```
 
-Components are copied directly into your project under `src/components/FormElements/` by default. You can configure this by editing `makdos.config.json` (created automatically on `init`):
+What it does automatically:
+- **Next.js** — installs `tailwindcss @tailwindcss/postcss postcss` and creates `postcss.config.mjs`
+- **Vite** — installs `tailwindcss @tailwindcss/vite` and shows the config step
+- Both — creates `makdos-theme.css` and `makdos.config.json` in your project root
+
+### 2. Import the theme in your global CSS
+
+**Next.js** (`app/globals.css`):
+```css
+@import "tailwindcss";
+@import "./makdos-theme.css";
+```
+
+**Vite** (`src/index.css`):
+```css
+@import "tailwindcss";
+@import "./makdos-theme.css";
+```
+
+### 3. Vite only — add the plugin to vite.config.ts
+
+```ts
+import tailwindcss from "@tailwindcss/vite"
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+})
+```
+
+> Next.js users can skip this step — `postcss.config.mjs` was created automatically.
+
+### 4. Add components
+
+```bash
+npx @makdosdev/form-ui add FormTextInput
+npx @makdosdev/form-ui add FormTextInput FormSelectBox FormCheckBox
+```
+
+Components are copied into `src/components/FormElements/` by default. Change the destination in `makdos.config.json`:
 
 ```json
 {
@@ -27,6 +62,12 @@ Or override it once with the `--path` flag:
 
 ```bash
 npx @makdosdev/form-ui add FormTextInput --path src/components/forms
+```
+
+### Other commands
+
+```bash
+npx @makdosdev/form-ui list   # List all available components
 ```
 
 ## Available Components
@@ -87,33 +128,11 @@ All components are styled using CSS custom properties. This means you can change
 
 ### Setup
 
-Run the init command to add the theme file to your project:
+`makdos-theme.css` is created automatically when you run `init` or add your first component. Import it in your global CSS file:
 
-```bash
-npx @makdosdev/form-ui init
-```
-
-This creates `makdos-theme.css` in your project root. Then import it in your global CSS:
-
-**Tailwind v4:**
 ```css
 @import "tailwindcss";
 @import "./makdos-theme.css";
-```
-
-**Tailwind v3 (`tailwind.config.js`):**
-```js
-const formelementscolor = require('./makdos-theme-colors.json')
-
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        ...formelementscolor
-      }
-    }
-  }
-}
 ```
 
 ### Customizing Colors
