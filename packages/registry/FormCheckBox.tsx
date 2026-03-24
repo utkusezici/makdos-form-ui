@@ -1,6 +1,8 @@
 import { useEffect } from "react";
-import Generic, { GenericProps } from "./Generic";
-import CheckBox, { ICheckBox } from "./components/CheckBox";
+import Generic from "./Generic";
+import type { GenericProps } from "./Generic";
+import CheckBox from "./components/CheckBox";
+import type { ICheckBox } from "./components/CheckBox";
 import { useFormContext } from "react-hook-form";
 
 interface FormCheckboxProps extends ICheckBox, Omit<GenericProps, "children"> {

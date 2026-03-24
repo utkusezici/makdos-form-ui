@@ -1,12 +1,6 @@
 import { useEffect } from "react";
-import {
-  FieldValues,
-  Path,
-  RegisterOptions,
-  useController,
-  UseControllerReturn,
-  useFormContext,
-} from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
+import type { FieldValues, Path, RegisterOptions, UseControllerReturn } from "react-hook-form";
 
 interface Props<T extends FieldValues = FieldValues> {
   name: Path<T>;

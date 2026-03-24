@@ -1,6 +1,8 @@
-import SelectBox, { ISelectBox } from './components/SelectBox';
+import SelectBox from './components/SelectBox';
+import type { ISelectBox } from './components/SelectBox';
 import { useEffect, useState, useRef } from 'react';
-import Generic, { GenericProps } from './Generic';
+import Generic from './Generic';
+import type { GenericProps } from './Generic';
 
 interface FormSelectBoxProps extends ISelectBox, Omit<GenericProps, "children"> {
   name: string;

@@ -1,5 +1,7 @@
-import Generic, { GenericProps } from  "./Generic";
-import TextInput, { ITextInput } from "./components/TextInput";
+import Generic from "./Generic";
+import type { GenericProps } from "./Generic";
+import TextInput from "./components/TextInput";
+import type { ITextInput } from "./components/TextInput";
 
 interface FormTextInputProps
   extends ITextInput,

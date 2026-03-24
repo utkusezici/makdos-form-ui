@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import Generic, { GenericProps } from "./Generic";
+import Generic from "./Generic";
+import type { GenericProps } from "./Generic";
 import { useFormContext } from "react-hook-form";
-import Toggle, { IToggle } from "./components/Toggle";
+import Toggle from "./components/Toggle";
+import type { IToggle } from "./components/Toggle";
 
 interface FormToggleProps extends IToggle, Omit<GenericProps, "children"> {
   name: string;

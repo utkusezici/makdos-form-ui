@@ -1,5 +1,7 @@
-import Generic, { GenericProps } from  "./Generic";
-import TextArea,{ ITextArea } from "./components/TextArea";
+import Generic from "./Generic";
+import type { GenericProps } from "./Generic";
+import TextArea from "./components/TextArea";
+import type { ITextArea } from "./components/TextArea";
 
 interface FormTextAreaProps
   extends ITextArea,

@@ -1,6 +1,8 @@
-import PhoneInput, { IPhoneInput } from './components/PhoneInput';
+import PhoneInput from './components/PhoneInput';
+import type { IPhoneInput } from './components/PhoneInput';
 import { useState } from 'react';
-import Generic, { GenericProps } from './Generic';
+import Generic from './Generic';
+import type { GenericProps } from './Generic';
 
 interface FormPhoneInputProps extends IPhoneInput, Omit<GenericProps, "children"> {
   name: string;

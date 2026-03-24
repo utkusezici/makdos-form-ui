@@ -1,5 +1,7 @@
-import Generic, { GenericProps } from "./Generic";
-import Time, { ITime } from "./components/Time";
+import Generic from "./Generic";
+import type { GenericProps } from "./Generic";
+import Time from "./components/Time";
+import type { ITime } from "./components/Time";
 
 interface FormTimeProps
     extends ITime,

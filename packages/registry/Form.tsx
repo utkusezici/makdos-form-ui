@@ -1,12 +1,8 @@
 "use client"
-import { PropsWithChildren, useEffect, useRef } from "react";
-import {
-  DefaultValues,
-  FieldValues,
-  FormProvider,
-  useForm,
-  UseFormReturn,
-} from "react-hook-form";
+import { useEffect, useRef } from "react";
+import type { PropsWithChildren } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import type { DefaultValues, FieldValues, UseFormReturn } from "react-hook-form";
 
 interface Props<T extends FieldValues = FieldValues> extends PropsWithChildren {
   methods?: UseFormReturn<T, any>;

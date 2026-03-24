@@ -1,5 +1,7 @@
-import Generic, { GenericProps } from  "./Generic";
-import DateTime,{IDateTime} from "./components/DateTime";
+import Generic from "./Generic";
+import type { GenericProps } from "./Generic";
+import DateTime from "./components/DateTime";
+import type { IDateTime } from "./components/DateTime";
 
 interface FormDateTimeProps
   extends IDateTime,

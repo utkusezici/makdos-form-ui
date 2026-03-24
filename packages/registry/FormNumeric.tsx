@@ -1,5 +1,7 @@
-import Generic, { GenericProps } from  "./Generic";
-import Numeric, { INumeric } from "./components/Numeric";
+import Generic from "./Generic";
+import type { GenericProps } from "./Generic";
+import Numeric from "./components/Numeric";
+import type { INumeric } from "./components/Numeric";
 
 interface FormNumericProps
   extends INumeric,
