@@ -2,6 +2,8 @@
 
 A CLI-first React form component library built on React Hook Form + Tailwind CSS. Add components directly to your project — own the code, customize freely.
 
+Built by [Makdos](https://makdos.com/en/) — software products crafted for modern teams.
+
 ## Getting Started
 
 ### 1. Initialize
@@ -698,6 +700,8 @@ function ContactForm() {
 
 - **Utku Sezici** — [@utkusezici](https://github.com/utkusezici)
 - **Berke Özenses** — [@berkeozenses](https://github.com/berkeozenses)
+
+Made at [Makdos](https://makdos.com/en/)
 
 ## License
 
