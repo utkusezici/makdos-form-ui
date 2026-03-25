@@ -1,23 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 
-type SelextBox = {
-  id: string,
-  text: string,
-  checked: boolean,
-  icon?: any
-  items: any[],
-  secondaryText?: any,
-  contentCheck?: boolean,
-  selectedType?: boolean,
-  typeValue?: any,
-  isContent?: boolean
-}
-
 export function useOutSideClick(closeModal: any) {
   const wrapperRef = useRef(null);
-
   useOutSide(wrapperRef);
-
   function useOutSide(ref: any) {
     useEffect(() => {
       function handleClickOutside(event: any) {
@@ -25,7 +10,6 @@ export function useOutSideClick(closeModal: any) {
           closeModal(false);
         }
       }
-
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
@@ -35,28 +19,6 @@ export function useOutSideClick(closeModal: any) {
   return [wrapperRef];
 
 }
-
-
-// export function useSelectbox(): [any[], (data: any, value: string | number, text: string) => void] {
-//   const [allData, setAllData] = useState([]);
-
-//   function configureSelectBoxItem(data: any, value: string | number, text: string) {
-//     if (data) {
-//       let configure: any = [];
-//       data.map((item: any) => {
-//         configure.push({
-//           value: item[value],
-//           text: item[text],
-//           otherInfo: item
-//         });
-//       });
-//       setAllData(configure);
-//     }
-
-//   }
-
-//   return [allData, configureSelectBoxItem];
-// }
 
 export function useSelectbox(initialData: any[] = []): [any[], (data: any, value: string | number, text: string) => void] {
   const [allData, setAllData] = useState(() =>

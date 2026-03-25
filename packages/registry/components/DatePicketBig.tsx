@@ -2,7 +2,7 @@ import { IconCalendar } from '@tabler/icons-react'
 import moment from 'moment'
 import { useEffect, useState, useRef } from 'react'
 import DateTime from './DateTime'
-import { useOutSideClick } from 'hooks'
+import { useOutSideClick } from '../hooks'
 import Button from './Button'
 
 type Props = {

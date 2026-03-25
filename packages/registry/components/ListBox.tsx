@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router';
-import CheckBox from 'components/FormElements/components/CheckBox';
+import CheckBox from './CheckBox';
 import { IconCircleArrowLeft, IconCircleArrowRight, IconSearch, IconX } from '@tabler/icons-react';
-import { fixTurkishCharacters } from 'helpers/functions';
+
+function fixTurkishCharacters(str: string) {
+    const charMap = { 'İ': 'i', 'I': 'ı', 'Ğ': 'ğ', 'Ü': 'ü', 'Ş': 'ş', 'Ö': 'ö', 'Ç': 'ç' };
+    return str?.replace(/[İIĞÜŞÖÇ]/g, (char) => charMap[char as keyof typeof charMap]);
+}
 
 
 type Props = {

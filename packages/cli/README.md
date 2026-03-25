@@ -109,8 +109,6 @@ Use these directly with `useState` — no form required. Great for filters, sear
 | `ListBox` | Dual-list selection (available / selected) |
 | `Button` | Button with 5 variants (primary, secondary, tertiary, bordered, error) |
 | `TextEditor` | Rich text editor |
-| `Paginate` | Pagination |
-| `FileUploader` | File upload with modal |
 
 ### Hooks
 
@@ -507,20 +505,6 @@ const [editorData, setEditorData] = useState()
 
 ---
 
-## Paginate
-
-```tsx
-import Paginate from '@/components/ui/components/Paginate'
-
-<Paginate
-  pageTotal={numberOfPages}
-  pageLimit={pageLimit}
-  onPageLimitChange={setPageLimit}
-/>
-```
-
----
-
 ## ListBox
 
 ```tsx
@@ -569,26 +553,6 @@ useEffect(() => {
   setSelectedItems={setSelected}
   search
   placeholder="Select..."
-/>
-```
-
----
-
-## FileUploader
-
-```tsx
-import FileUploader from '@/components/ui/FileUploader/FileUploader'
-
-const [files, setFiles] = useState([])
-
-<FileUploader
-  value={files}
-  setValue={setFiles}
-  onChange={setFiles}
-  formats={['pdf', 'jpg', 'jpeg', 'png']}
-  onlyFile
-  multiple={1}
-  label="Upload File"
 />
 ```
 

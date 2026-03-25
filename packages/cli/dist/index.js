@@ -8424,12 +8424,7 @@ var registry_default = {
   DatePicketBig: {
     files: ["components/DatePicketBig.tsx"],
     npmDependencies: ["@tabler/icons-react", "moment"],
-    registryDependencies: []
-  },
-  Paginate: {
-    files: ["components/Paginate.tsx"],
-    npmDependencies: ["react-paginate", "react-router-dom", "@tabler/icons-react"],
-    registryDependencies: []
+    registryDependencies: ["hooks"]
   },
   ListBox: {
     files: ["components/ListBox.tsx"],
@@ -8439,11 +8434,6 @@ var registry_default = {
   SelectBoxGroup: {
     files: ["components/SelectBoxGroup.tsx", "components/CheckBox.tsx"],
     npmDependencies: ["@tabler/icons-react", "react-hook-form"],
-    registryDependencies: []
-  },
-  FileUploader: {
-    files: ["FileUploader/FileUploader.tsx", "FileUploader/FileUploaderModal.tsx"],
-    npmDependencies: ["@tabler/icons-react", "react-router-dom"],
     registryDependencies: []
   },
   hooks: {

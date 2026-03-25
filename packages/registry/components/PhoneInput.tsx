@@ -1,6 +1,8 @@
 import { IconAlertTriangleFilled } from '@tabler/icons-react';
 import React from 'react';
-import PhoneInputPackage from 'react-phone-input-2'
+import * as PhoneInputLib from 'react-phone-input-2'
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const PhoneInputPackage = (PhoneInputLib as any).default ?? PhoneInputLib
 import 'react-phone-input-2/lib/style.css'
 
 export interface IPhoneInput {
@@ -9,7 +11,7 @@ export interface IPhoneInput {
     label?: string;
     placeholder?: string;
     value?: string;
-    setValue?: any;
+    setValue?: (value: string) => void;
     disabled?: boolean;
     style?: string;
     innerRef?: any;
@@ -36,10 +38,8 @@ const PhoneInput = ({
 }: IPhoneInput
 ) => {
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (setValue) {
-            setValue(e.target.value); // Input değerini iletebilirsiniz
-        }
+    const handleInputChange = (value: string) => {
+        setValue?.(value);
     };
 
     return (

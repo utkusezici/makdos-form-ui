@@ -72,14 +72,9 @@
   "DatePicketBig": {
     "files": ["components/DatePicketBig.tsx"],
     "npmDependencies": ["@tabler/icons-react", "moment"],
-    "registryDependencies": []
+    "registryDependencies": ["hooks"]
   },
-  "Paginate": {
-    "files": ["components/Paginate.tsx"],
-    "npmDependencies": ["react-paginate", "react-router-dom", "@tabler/icons-react"],
-    "registryDependencies": []
-  },
-  "ListBox": {
+"ListBox": {
     "files": ["components/ListBox.tsx"],
     "npmDependencies": ["@tabler/icons-react", "react-router"],
     "registryDependencies": []
@@ -87,11 +82,6 @@
   "SelectBoxGroup": {
     "files": ["components/SelectBoxGroup.tsx", "components/CheckBox.tsx"],
     "npmDependencies": ["@tabler/icons-react", "react-hook-form"],
-    "registryDependencies": []
-  },
-  "FileUploader": {
-    "files": ["FileUploader/FileUploader.tsx", "FileUploader/FileUploaderModal.tsx"],
-    "npmDependencies": ["@tabler/icons-react", "react-router-dom"],
     "registryDependencies": []
   },
   "hooks": {
