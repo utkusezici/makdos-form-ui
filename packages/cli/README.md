@@ -4,7 +4,7 @@ A CLI-first React form component library built on React Hook Form + Tailwind CSS
 
 Built by [Makdos](https://makdos.com/en/) — software products crafted for modern teams.
 
-![Form Components Preview](./FormScreenshot.png)
+![Form Components Preview](https://raw.githubusercontent.com/utkusezici/makdos-form-ui/main/packages/cli/FormScreenshot.png)
 
 ## Getting Started
 
