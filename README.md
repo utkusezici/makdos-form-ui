@@ -331,6 +331,22 @@ import FormTextArea from '@/components/FormElements/FormTextArea'
 />
 ```
 
+**Standalone:**
+```tsx
+import TextArea from '@/components/FormElements/components/TextArea'
+
+const [note, setNote] = useState('')
+
+<TextArea
+  name="note"
+  label="Note"
+  placeholder="Write something..."
+  rows={4}
+  value={note}
+  onChange={setNote}
+/>
+```
+
 ---
 
 ## SelectBox / FormSelectBox
@@ -443,6 +459,21 @@ import FormCheckBox from '@/components/FormElements/FormCheckBox'
 />
 ```
 
+**Standalone:**
+```tsx
+import CheckBox from '@/components/FormElements/components/CheckBox'
+
+const [checked, setChecked] = useState(false)
+
+<CheckBox
+  id="remember"
+  label="Remember me"
+  labelRight
+  checked={checked}
+  onChange={(val) => setChecked(val)}
+/>
+```
+
 ---
 
 ## Toggle / FormToggle
@@ -533,6 +564,22 @@ import FormNumeric from '@/components/FormElements/FormNumeric'
     required: { value: true, message: 'This field is required.' },
     min: { value: 0.01, message: 'Balance must be greater than 0.' },
   }}
+/>
+```
+
+**Standalone:**
+```tsx
+import Numeric from '@/components/FormElements/components/Numeric'
+
+const [quantity, setQuantity] = useState(1)
+
+<Numeric
+  name="quantity"
+  label="Quantity"
+  value={quantity}
+  onChange={setQuantity}
+  min={1}
+  max={100}
 />
 ```
 
@@ -627,6 +674,21 @@ import FormTime from '@/components/FormElements/FormTime'
 />
 ```
 
+**Standalone:**
+```tsx
+import Time from '@/components/FormElements/components/Time'
+
+const [time, setTime] = useState('')
+
+<Time
+  name="meeting_time"
+  label="Meeting Time"
+  value={time}
+  onChange={setTime}
+  step="900"
+/>
+```
+
 ---
 
 ## PhoneInput / FormPhoneInput
@@ -662,6 +724,22 @@ import FormPhoneInput from '@/components/FormElements/FormPhoneInput'
     required: { value: true, message: 'This field is required.' },
     minLength: { value: 12, message: 'Please enter a valid phone number.' },
   }}
+/>
+```
+
+**Standalone:**
+```tsx
+import PhoneInput from '@/components/FormElements/components/PhoneInput'
+
+const [phone, setPhone] = useState('')
+
+<PhoneInput
+  id="phone"
+  label="Phone"
+  placeholder="Phone number"
+  value={phone}
+  setValue={setPhone}
+  search
 />
 ```
 
