@@ -1,6 +1,6 @@
 import { IconAlertTriangleFilled } from '@tabler/icons-react';
 import React from 'react';
-import { default as PhoneInputPackage } from 'react-phone-input-2'
+import PhoneInputPackage from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 
 export interface IPhoneInput {
