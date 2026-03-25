@@ -2,7 +2,8 @@ import { IconAlertTriangleFilled } from '@tabler/icons-react';
 import React from 'react';
 import * as PhoneInputLib from 'react-phone-input-2'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const PhoneInputPackage = (PhoneInputLib as any).default ?? PhoneInputLib
+const _lib = PhoneInputLib as any
+const PhoneInputPackage = _lib.default?.default ?? _lib.default ?? _lib
 import 'react-phone-input-2/lib/style.css'
 
 export interface IPhoneInput {
