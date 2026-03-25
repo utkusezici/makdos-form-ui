@@ -2,22 +2,59 @@
 
 A CLI-first React form component library built on React Hook Form + Tailwind CSS. Add components directly to your project — own the code, customize freely.
 
+Built by [Makdos](https://makdos.com/en/) — software products crafted for modern teams.
+
 ![Form Components Preview](https://raw.githubusercontent.com/utkusezici/makdos-form-ui/main/packages/cli/FormScreenshot.png)
 
-## Usage
+## Getting Started
+
+### 1. Initialize
+
+Run the init command in your project root. This sets up Tailwind CSS (if not already installed), creates `makdos-theme.css`, and generates `makdos.config.json`.
 
 ```bash
-# Add a component
-npx @makdosdev/form-ui add FormTextInput
-
-# Add multiple components
-npx @makdosdev/form-ui add FormTextInput FormSelectBox FormCheckBox
-
-# List all available components
-npx @makdosdev/form-ui list
+npx @makdosdev/form-ui init
 ```
 
-Components are copied directly into your project under `src/components/FormElements/` by default. You can configure this by editing `makdos.config.json` (created automatically on `init`):
+What it does automatically:
+- **Next.js** — installs `tailwindcss @tailwindcss/postcss postcss` and creates `postcss.config.mjs`
+- **Vite** — installs `tailwindcss @tailwindcss/vite` and shows the config step
+- Both — creates `makdos-theme.css` and `makdos.config.json` in your project root
+
+### 2. Import the theme in your global CSS
+
+**Next.js** (`app/globals.css`):
+```css
+@import "tailwindcss";
+@import "./makdos-theme.css";
+```
+
+**Vite** (`src/index.css`):
+```css
+@import "tailwindcss";
+@import "./makdos-theme.css";
+```
+
+### 3. Vite only — add the plugin to vite.config.ts
+
+```ts
+import tailwindcss from "@tailwindcss/vite"
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+})
+```
+
+> Next.js users can skip this step — `postcss.config.mjs` was created automatically.
+
+### 4. Add components
+
+```bash
+npx @makdosdev/form-ui add FormTextInput
+npx @makdosdev/form-ui add FormTextInput FormSelectBox FormCheckBox
+```
+
+Components are copied into `src/components/FormElements/` by default. Change the destination in `makdos.config.json`:
 
 ```json
 {
@@ -29,6 +66,12 @@ Or override it once with the `--path` flag:
 
 ```bash
 npx @makdosdev/form-ui add FormTextInput --path src/components/forms
+```
+
+### Other commands
+
+```bash
+npx @makdosdev/form-ui list   # List all available components
 ```
 
 ## Available Components
@@ -87,33 +130,11 @@ All components are styled using CSS custom properties. This means you can change
 
 ### Setup
 
-Run the init command to add the theme file to your project:
+`makdos-theme.css` is created automatically when you run `init` or add your first component. Import it in your global CSS file:
 
-```bash
-npx @makdosdev/form-ui init
-```
-
-This creates `makdos-theme.css` in your project root. Then import it in your global CSS:
-
-**Tailwind v4:**
 ```css
 @import "tailwindcss";
 @import "./makdos-theme.css";
-```
-
-**Tailwind v3 (`tailwind.config.js`):**
-```js
-const formelementscolor = require('./makdos-theme-colors.json')
-
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        ...formelementscolor
-      }
-    }
-  }
-}
 ```
 
 ### Customizing Colors
@@ -182,11 +203,64 @@ Every component can be used in two ways:
 
 ---
 
-## TextInput
+## Form
+
+The `<Form>` wrapper creates a React Hook Form context. All `Form*` components inside it automatically register, validate, and submit.
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `onSubmit` | `(data: T, isCtrlS: boolean) => void` | Yes | Submit handler. `isCtrlS` is `true` when triggered via Ctrl+S keyboard shortcut. |
+| `children` | `ReactNode` | Yes | Form content — place all form fields here |
+| `defaultValues` | `DefaultValues<T>` | No | Initial values for all fields |
+| `methods` | `UseFormReturn<T>` | No | Pass external RHF methods. If omitted, Form creates them internally. |
+| `onMethods` | `(methods: UseFormReturn<T>) => void` | No | Callback to receive the internal form methods (useful for manual `reset`, `setValue`, etc.) |
+| `resettable` | `boolean` | No | If `true`, resets all fields to `defaultValues` after a successful submit |
+
+```tsx
+import Form, { SubmitFunction } from '@/components/FormElements/Form'
+
+const handleSubmit: SubmitFunction = async (data, isCtrlS) => {
+  console.log(data)
+}
+
+<Form onSubmit={handleSubmit} defaultValues={{ email: '' }} resettable>
+  {/* form fields */}
+</Form>
+```
+
+---
+
+## TextInput / FormTextInput
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | Yes (Form) | Field name — must match the form data key |
+| `label` | `string` | No | Label shown above the input |
+| `placeholder` | `string` | No | Placeholder text |
+| `type` | `"text" \| "password" \| "number" \| "domain" \| "search"` | No | Input type. Default: `"text"`. `"password"` adds a show/hide toggle. `"search"` adds a clear button. `"domain"` prefixes `https://`. |
+| `value` | `string` | No | Controlled value (standalone use) |
+| `defaultValue` | `string` | No | Initial uncontrolled value |
+| `onChange` | `(value: string) => void` | No | Called on every keystroke (standalone use) |
+| `leftIcon` | `ReactNode` | No | Icon displayed on the left inside the input |
+| `required` | `boolean` | No | Shows a `*` indicator next to the label |
+| `disabled` | `boolean` | No | Disables the input |
+| `min` | `number` | No | Min value for `type="number"` |
+| `max` | `number` | No | Max value for `type="number"` |
+| `style` | `string` | No | Extra Tailwind classes on the outer wrapper div |
+| `inputStyle` | `string` | No | Extra Tailwind classes on the `<input>` element |
+| `customIcon` | `string` | No | CSS class for a custom right-side icon |
+| `error` | `string` | No | Error message shown below the input |
+| `onKeyUp` | `React.KeyboardEventHandler<HTMLInputElement>` | No | Key up event handler |
+| `rules` | `RegisterOptions` | No | **(FormTextInput only)** React Hook Form validation rules |
+| `resetValue` | `unknown` | No | **(FormTextInput only)** Value the field resets to when the form resets |
 
 **With Form:**
 ```tsx
-import FormTextInput from '@/components/ui/FormTextInput'
+import FormTextInput from '@/components/FormElements/FormTextInput'
 import { IconMail, IconLock } from '@tabler/icons-react'
 
 <FormTextInput
@@ -209,7 +283,7 @@ import { IconMail, IconLock } from '@tabler/icons-react'
 
 **Standalone (search / filter):**
 ```tsx
-import TextInput from '@/components/ui/components/TextInput'
+import TextInput from '@/components/FormElements/components/TextInput'
 
 const [search, setSearch] = useState('')
 
@@ -224,11 +298,30 @@ const [search, setSearch] = useState('')
 
 ---
 
-## TextArea
+## TextArea / FormTextArea
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | Yes (Form) | Field name |
+| `label` | `string` | No | Label shown above the textarea |
+| `placeholder` | `string` | No | Placeholder text |
+| `value` | `string` | No | Controlled value (standalone use) |
+| `defaultValue` | `string` | No | Initial uncontrolled value |
+| `onChange` | `(value: string) => void` | No | Called on every change (standalone use) |
+| `rows` | `number` | No | Number of visible text rows. Default: browser default |
+| `required` | `boolean` | No | Shows a `*` indicator next to the label |
+| `disabled` | `boolean` | No | Disables the textarea |
+| `style` | `string` | No | Extra Tailwind classes on the outer wrapper div |
+| `inputStyle` | `string` | No | Extra Tailwind classes on the `<textarea>` element |
+| `error` | `string` | No | Error message shown below the textarea |
+| `rules` | `RegisterOptions` | No | **(FormTextArea only)** React Hook Form validation rules |
+| `resetValue` | `unknown` | No | **(FormTextArea only)** Value the field resets to |
 
 **With Form:**
 ```tsx
-import FormTextArea from '@/components/ui/FormTextArea'
+import FormTextArea from '@/components/FormElements/FormTextArea'
 
 <FormTextArea
   name="note"
@@ -240,11 +333,39 @@ import FormTextArea from '@/components/ui/FormTextArea'
 
 ---
 
-## SelectBox
+## SelectBox / FormSelectBox
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | Yes (Form) | Field name |
+| `label` | `string` | No | Label shown above the dropdown |
+| `placeholder` | `string` | No | Placeholder text when nothing is selected |
+| `items` | `SelectBoxItem[]` | No | List of options. Each item: `{ value, text, checked?, icon?, otherInfo? }` |
+| `setItems` | `(data, valueKey, textKey, checkedKey?) => void` | No | Converts raw API data into `SelectBoxItem[]` format (use with `useSelectbox` hook) |
+| `selectedItems` | `SelectBoxItem \| SelectBoxItem[] \| null` | No | Currently selected item(s) |
+| `setSelectedItems` | `(item?) => void` | No | Called when selection changes |
+| `multiSelect` | `boolean` | No | Enables multi-select mode |
+| `search` | `boolean` | No | Adds a search input inside the dropdown |
+| `searchAndAdd` | `(val: string) => void` | No | Called when the user types in search — useful for creating new options |
+| `defaultSelect` | `SelectBoxItem` | No | Pre-selected item on first render |
+| `formDefaultValue` | `string \| number` | No | **(FormSelectBox only)** Pre-selects the item whose `value` matches this |
+| `formDefaultTriggerFunction` | `(item: SelectBoxItem) => void` | No | Called once when `formDefaultValue` is applied |
+| `formClickTriggerFunction` | `(item: SelectBoxItem) => void` | No | Called every time the user selects an item |
+| `onChange` | `(item: SelectBoxItem) => void` | No | Called when selection changes |
+| `required` | `boolean` | No | Shows a `*` indicator next to the label |
+| `disabled` | `boolean` | No | Disables the dropdown |
+| `paginate` | `boolean` | No | Enables virtual/paginated rendering for large lists |
+| `price` | `boolean` | No | Formats item values as price |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+| `error` | `FieldError` | No | React Hook Form field error object |
+| `rules` | `RegisterOptions` | No | **(FormSelectBox only)** Validation rules |
+| `resetValue` | `unknown` | No | **(FormSelectBox only)** Value the field resets to |
 
 **With Form:**
 ```tsx
-import FormSelectBox from '@/components/ui/FormSelectBox'
+import FormSelectBox from '@/components/FormElements/FormSelectBox'
 
 <FormSelectBox
   name="role"
@@ -263,8 +384,8 @@ import FormSelectBox from '@/components/ui/FormSelectBox'
 
 **Standalone (filter bar) — with `useSelectbox` hook:**
 ```tsx
-import SelectBox from '@/components/ui/components/SelectBox'
-import { useSelectbox } from '@/components/ui/hooks'
+import SelectBox from '@/components/FormElements/components/SelectBox'
+import { useSelectbox } from '@/components/FormElements/hooks'
 
 const [companyList, setCompanyList] = useSelectbox()
 const [selectedCompany, setSelectedCompany] = useState(null)
@@ -286,11 +407,33 @@ useEffect(() => {
 
 ---
 
-## CheckBox
+## CheckBox / FormCheckBox
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | Yes (Form) | Field name |
+| `id` | `string` | No | HTML `id` attribute |
+| `label` | `string` | No | Text label |
+| `labelJSX` | `JSX.Element` | No | JSX label — use instead of `label` for custom markup (links, bold text, etc.) |
+| `labelLeft` | `boolean` | No | Places the label to the left of the checkbox |
+| `labelRight` | `boolean` | No | Places the label to the right of the checkbox |
+| `labelStyle` | `string` | No | Extra Tailwind classes on the label |
+| `description` | `string` | No | Small helper text shown below the label |
+| `checked` | `boolean` | No | Controlled checked state (standalone use) |
+| `defaultValue` | `boolean` | No | Initial uncontrolled checked state |
+| `onChange` | `(checked: boolean) => void` | No | Called when checked state changes |
+| `required` | `boolean` | No | — |
+| `disabled` | `boolean` | No | Disables the checkbox |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+| `error` | `FieldError` | No | Error object — shows message below the checkbox |
+| `rules` | `RegisterOptions` | No | **(FormCheckBox only)** Validation rules |
+| `resetValue` | `unknown` | No | **(FormCheckBox only)** Value the field resets to |
 
 **With Form:**
 ```tsx
-import FormCheckBox from '@/components/ui/FormCheckBox'
+import FormCheckBox from '@/components/FormElements/FormCheckBox'
 
 <FormCheckBox
   name="acceptTerms"
@@ -302,11 +445,30 @@ import FormCheckBox from '@/components/ui/FormCheckBox'
 
 ---
 
-## Toggle
+## Toggle / FormToggle
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | `string` | Yes | HTML `id` — required to link the label to the input |
+| `name` | `string` | No | Field name (required when used with Form) |
+| `label` | `string` | No | Text label |
+| `labelRight` | `boolean` | No | Places the label to the right of the toggle |
+| `labelStyle` | `string` | No | Extra Tailwind classes on the label |
+| `isCheck` | `boolean` | No | Controlled checked state (standalone use) |
+| `setIsCheck` | `React.Dispatch<React.SetStateAction<boolean>>` | No | State setter for controlled use |
+| `triggerFunction` | `(value: boolean) => void` | No | Called after every toggle change with the new value |
+| `checkColor` | `string` | No | Custom Tailwind color class for the toggle when ON |
+| `disabled` | `boolean` | No | Disables the toggle |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+| `error` | `FieldError` | No | Error object — shows message below the toggle |
+| `rules` | `RegisterOptions` | No | **(FormToggle only)** Validation rules |
+| `resetValue` | `unknown` | No | **(FormToggle only)** Value the field resets to |
 
 **With Form:**
 ```tsx
-import FormToggle from '@/components/ui/FormToogle'
+import FormToggle from '@/components/FormElements/FormToogle'
 
 <FormToggle
   id="is_active"
@@ -319,7 +481,7 @@ import FormToggle from '@/components/ui/FormToogle'
 
 **Standalone:**
 ```tsx
-import FormToggle from '@/components/ui/FormToogle'
+import FormToggle from '@/components/FormElements/FormToogle'
 
 const [isDeposit, setIsDeposit] = useState(false)
 
@@ -336,11 +498,31 @@ const [isDeposit, setIsDeposit] = useState(false)
 
 ---
 
-## Numeric
+## Numeric / FormNumeric
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | Yes (Form) | Field name |
+| `id` | `string` | No | HTML `id` attribute |
+| `label` | `string` | No | Label shown above the input |
+| `placeholder` | `string` | No | Placeholder text |
+| `value` | `number` | No | Controlled value (standalone use) |
+| `defaultValue` | `number` | No | Initial uncontrolled value |
+| `onChange` | `(value: number) => void` | No | Called when value changes (debounced) |
+| `min` | `number` | No | Minimum allowed value — clamps on blur |
+| `max` | `number` | No | Maximum allowed value — clamps on blur |
+| `required` | `boolean` | No | Shows a `*` indicator next to the label |
+| `disabled` | `boolean` | No | Disables the input |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+| `error` | `string` | No | Error message shown below the input |
+| `rules` | `RegisterOptions` | No | **(FormNumeric only)** Validation rules |
+| `resetValue` | `unknown` | No | **(FormNumeric only)** Value the field resets to |
 
 **With Form:**
 ```tsx
-import FormNumeric from '@/components/ui/FormNumeric'
+import FormNumeric from '@/components/FormElements/FormNumeric'
 
 <FormNumeric
   name="balance"
@@ -356,11 +538,29 @@ import FormNumeric from '@/components/ui/FormNumeric'
 
 ---
 
-## DateTime
+## DateTime / FormDateTime
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | Yes (Form) | Field name |
+| `id` | `string` | No | HTML `id` attribute |
+| `label` | `string` | No | Label shown above the input |
+| `type` | `"date" \| "datetime-local"` | No | Input type. Default: `"date"` |
+| `value` | `string` | No | Controlled value — ISO date string (standalone use) |
+| `onChange` | `(value: string) => void` | No | Called when value changes |
+| `required` | `boolean` | No | Shows a `*` indicator next to the label |
+| `disabled` | `boolean` | No | Disables the input |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+| `inputStyle` | `string` | No | Extra Tailwind classes on the `<input>` element |
+| `error` | `string` | No | Error message shown below the input |
+| `rules` | `RegisterOptions` | No | **(FormDateTime only)** Validation rules |
+| `resetValue` | `unknown` | No | **(FormDateTime only)** Value the field resets to |
 
 **With Form:**
 ```tsx
-import FormDateTime from '@/components/ui/FormDateTime'
+import FormDateTime from '@/components/FormElements/FormDateTime'
 
 <FormDateTime
   name="start_date"
@@ -371,9 +571,9 @@ import FormDateTime from '@/components/ui/FormDateTime'
 />
 ```
 
-**Standalone (date filter):**
+**Standalone (date filter) — full calendar picker:**
 ```tsx
-import DatePicketBig from '@/components/ui/components/DatePicketBig'
+import DatePicketBig from '@/components/FormElements/components/DatePicketBig'
 
 const [date, setDate] = useState(null)
 
@@ -385,13 +585,40 @@ const [date, setDate] = useState(null)
 />
 ```
 
+### DatePicketBig Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `placeholder` | `string` | Yes | Placeholder text shown when no date is selected |
+| `value` | `any` | Yes | Currently selected date value |
+| `onChange` | `(value: any) => void` | Yes | Called when the date changes |
+| `onChangeDateTime` | `(date: any) => void` | Yes | Called with the formatted date — use this for side effects like filtering |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+
 ---
 
-## Time
+## Time / FormTime
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | Yes (Form) | Field name |
+| `id` | `string` | No | HTML `id` attribute |
+| `label` | `string` | No | Label shown above the input |
+| `value` | `string` | No | Controlled value — `"HH:mm"` format (standalone use) |
+| `onChange` | `(value: string) => void` | No | Called when value changes |
+| `step` | `string` | No | Time step interval in seconds (e.g. `"900"` = 15 min steps) |
+| `required` | `boolean` | No | Shows a `*` indicator next to the label |
+| `disabled` | `boolean` | No | Disables the input |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+| `error` | `string` | No | Error message shown below the input |
+| `rules` | `RegisterOptions` | No | **(FormTime only)** Validation rules |
+| `resetValue` | `unknown` | No | **(FormTime only)** Value the field resets to |
 
 **With Form:**
 ```tsx
-import FormTime from '@/components/ui/FormTime'
+import FormTime from '@/components/FormElements/FormTime'
 
 <FormTime
   name="meeting_time"
@@ -402,11 +629,29 @@ import FormTime from '@/components/ui/FormTime'
 
 ---
 
-## PhoneInput
+## PhoneInput / FormPhoneInput
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | Yes (Form) | Field name |
+| `id` | `string` | No | HTML `id` attribute |
+| `label` | `string` | No | Label shown above the input |
+| `placeholder` | `string` | No | Placeholder text |
+| `value` | `string` | No | Controlled phone number value including country code (standalone use) |
+| `setValue` | `(value: string) => void` | No | Called when the number changes (standalone use) |
+| `search` | `boolean` | No | Adds a search field inside the country code dropdown |
+| `required` | `boolean` | No | Shows a `*` indicator next to the label |
+| `disabled` | `boolean` | No | Disables the input |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+| `error` | `string` | No | Error message shown below the input |
+| `rules` | `RegisterOptions` | No | **(FormPhoneInput only)** Validation rules |
+| `resetValue` | `unknown` | No | **(FormPhoneInput only)** Value the field resets to |
 
 **With Form:**
 ```tsx
-import FormPhoneInput from '@/components/ui/FormPhoneInput'
+import FormPhoneInput from '@/components/FormElements/FormPhoneInput'
 
 <FormPhoneInput
   id="phone"
@@ -424,8 +669,23 @@ import FormPhoneInput from '@/components/ui/FormPhoneInput'
 
 ## Button
 
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `text` | `string` | No | Button label text |
+| `buttonType` | `"primary" \| "secondary" \| "tertiary" \| "bordered" \| "error"` | No | Visual style variant. Default: `"primary"` |
+| `type` | `"button" \| "submit" \| "reset"` | No | HTML button type. Default: `"submit"` |
+| `size` | `"small" \| "medium" \| "large"` | No | Button size. Default: `"medium"` |
+| `iconLeft` | `ReactNode` | No | Icon displayed to the left of the text |
+| `iconRight` | `ReactNode` | No | Icon displayed to the right of the text |
+| `onClick` | `() => void` | No | Click handler |
+| `disabled` | `boolean` | No | Disables the button |
+| `isLoading` | `boolean` | No | Shows a spinner and disables the button |
+| `style` | `string` | No | Extra Tailwind classes |
+
 ```tsx
-import Button from '@/components/ui/components/Button'
+import Button from '@/components/FormElements/components/Button'
 import { IconDownload, IconCircleCheck } from '@tabler/icons-react'
 
 // Default submit button
@@ -447,14 +707,27 @@ import { IconDownload, IconCircleCheck } from '@tabler/icons-react'
   iconLeft={<IconCircleCheck />}
   type="submit"
 />
+
+// Loading state
+<Button text="Saving..." buttonType="primary" isLoading />
 ```
 
 ---
 
 ## RadioButton
 
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | Yes | HTML `name` attribute — groups the radio buttons |
+| `items` | `{ id: string; text: string }[]` | Yes | List of options. `id` is the value, `text` is the label. |
+| `selected` | `string` | Yes | The `id` of the currently selected option |
+| `onChange` | `(value: string) => void` | Yes | Called with the `id` of the newly selected option |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+
 ```tsx
-import RadioButton from '@/components/ui/components/RadioButton'
+import RadioButton from '@/components/FormElements/components/RadioButton'
 
 const [selected, setSelected] = useState('income')
 
@@ -473,8 +746,15 @@ const [selected, setSelected] = useState('income')
 
 ## TextEditor
 
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `editorData` | `any` | Yes | Current editor content (HTML string or editor state) |
+| `onEditorChange` | `(state: any) => void` | Yes | Called whenever the content changes |
+
 ```tsx
-import TextEditor from '@/components/ui/components/TextEditor'
+import TextEditor from '@/components/FormElements/components/TextEditor'
 
 const [editorData, setEditorData] = useState()
 
@@ -488,8 +768,25 @@ const [editorData, setEditorData] = useState()
 
 ## ListBox
 
+A dual-panel component for moving items between an "available" list and a "selected" list.
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `type` | `string` | Yes | Layout type — use `"double"` for the standard two-panel layout |
+| `label` | `string` | Yes | Header label for the left (available) panel |
+| `items` | `any[]` | Yes | Array of available items. Each item must have `id` and `text`. |
+| `setItems` | `any` | Yes | State setter for `items` |
+| `selectedItems` | `any[]` | Yes | Array of selected items |
+| `setSelectedItems` | `any` | Yes | State setter for `selectedItems` |
+| `labelType` | `string` | No | Header label for the right (selected) panel. Default: `"Selected"` |
+| `height` | `string` | No | Tailwind height class for both panels (e.g. `"h-[300px]"`) |
+| `width` | `string` | No | Tailwind width class for both panels (e.g. `"w-[400px]"`) |
+| `autocomplete` | `boolean` | No | Enables a search/filter input on the available panel |
+
 ```tsx
-import ListBox from '@/components/ui/components/ListBox'
+import ListBox from '@/components/FormElements/components/ListBox'
 
 const [items, setItems] = useState([
   { id: 1, text: 'Item 1' },
@@ -514,9 +811,35 @@ const [selected, setSelected] = useState([])
 
 ## SelectBoxGroup
 
+A grouped dropdown where options are organized under category headers.
+
+### Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | `string` | No | Field name |
+| `label` | `string` | No | Label shown above the dropdown |
+| `placeholder` | `string` | No | Placeholder text when nothing is selected |
+| `type` | `"checkbox" \| "radio"` | No | Selection mode. `"checkbox"` for multi-select, `"radio"` for single. |
+| `items` | `any` | No | Grouped items — use `useSelectboxGroup` hook to format API data |
+| `setItems` | `any` | No | Setter function from `useSelectboxGroup` |
+| `selectedItems` | `any` | No | Currently selected item(s) |
+| `setSelectedItems` | `any` | No | State setter for selected items |
+| `search` | `boolean` | No | Adds a search input inside the dropdown |
+| `defaultSelect` | `any` | No | Pre-selected item on first render |
+| `formDefaultValue` | `any` | No | Pre-selects by value match |
+| `formDefaultTriggerFunction` | `any` | No | Called once when `formDefaultValue` is applied |
+| `formClickTriggerFunction` | `any` | No | Called every time the user selects an item |
+| `onChange` | `any` | No | Called when selection changes |
+| `required` | `boolean` | No | Shows a `*` indicator next to the label |
+| `disabled` | `boolean` | No | Disables the dropdown |
+| `paginate` | `boolean` | No | Enables paginated rendering for large lists |
+| `style` | `string` | No | Extra Tailwind classes on the wrapper |
+| `error` | `any` | No | Error message or object |
+
 ```tsx
-import SelectBoxGroup from '@/components/ui/components/SelectBoxGroup'
-import { useSelectboxGroup } from '@/components/ui/hooks'
+import SelectBoxGroup from '@/components/FormElements/components/SelectBoxGroup'
+import { useSelectboxGroup } from '@/components/FormElements/hooks'
 
 const [groupItems, setGroupItems] = useSelectboxGroup()
 const [selected, setSelected] = useState([])
@@ -548,26 +871,74 @@ import {
   useSelectboxGroup,
   useOutSideClick,
   useWindowSize
-} from '@/components/ui/hooks'
+} from '@/components/FormElements/hooks'
+```
 
-// Single select — converts API data to SelectBox format
+### useSelectbox
+
+Converts raw API data into `SelectBoxItem[]` format for `SelectBox`.
+
+```tsx
 const [items, setItems] = useSelectbox()
 setItems(apiData, 'id', 'name')
 // output: [{ value: id, text: name, otherInfo: { ...all fields } }]
+```
 
-// Multi select — with checked state
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `data` | `any[]` | Raw API response array |
+| `valueKey` | `string` | Field name to use as `value` |
+| `textKey` | `string` | Field name to use as `text` |
+
+### useMultipleSelectbox
+
+Same as `useSelectbox` but also maps a `checked` boolean field — use for pre-selected multi-select lists.
+
+```tsx
 const [items, setItems] = useMultipleSelectbox()
 setItems(apiData, 'id', 'name', 'is_selected')
+```
 
-// Grouped select — for SelectBoxGroup
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `data` | `any[]` | Raw API response array |
+| `valueKey` | `string` | Field name to use as `value` |
+| `textKey` | `string` | Field name to use as `text` |
+| `checkedKey` | `string \| boolean` | Field name (or literal `true`/`false`) to use as `checked` |
+
+### useSelectboxGroup
+
+Converts raw API data into grouped format for `SelectBoxGroup`.
+
+```tsx
 const [groupItems, setGroupItems] = useSelectboxGroup()
 setGroupItems(apiData, 'id', 'name', 'group_name')
+```
 
-// Outside click detection (for dropdowns/modals)
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `data` | `any[]` | Raw API response array |
+| `valueKey` | `string` | Field name to use as `value` |
+| `textKey` | `string` | Field name to use as `text` |
+| `groupName` | `string` | Field name to group items by |
+
+### useOutSideClick
+
+Detects clicks outside a referenced element — useful for closing dropdowns and modals.
+
+```tsx
 const [wrapperRef] = useOutSideClick(() => setIsOpen(false))
-<div ref={wrapperRef}>...</div>
 
-// Window size
+<div ref={wrapperRef}>
+  {/* dropdown content */}
+</div>
+```
+
+### useWindowSize
+
+Returns the current window dimensions, updated on resize.
+
+```tsx
 const { width, height } = useWindowSize()
 ```
 
@@ -576,14 +947,14 @@ const { width, height } = useWindowSize()
 ## Full Form Example
 
 ```tsx
-import Form, { SubmitFunction } from '@/components/ui/Form'
-import FormTextInput from '@/components/ui/FormTextInput'
-import FormSelectBox from '@/components/ui/FormSelectBox'
-import FormNumeric from '@/components/ui/FormNumeric'
-import FormPhoneInput from '@/components/ui/FormPhoneInput'
-import FormTextArea from '@/components/ui/FormTextArea'
-import Button from '@/components/ui/components/Button'
-import { useSelectbox } from '@/components/ui/hooks'
+import Form, { SubmitFunction } from '@/components/FormElements/Form'
+import FormTextInput from '@/components/FormElements/FormTextInput'
+import FormSelectBox from '@/components/FormElements/FormSelectBox'
+import FormNumeric from '@/components/FormElements/FormNumeric'
+import FormPhoneInput from '@/components/FormElements/FormPhoneInput'
+import FormTextArea from '@/components/FormElements/FormTextArea'
+import Button from '@/components/FormElements/components/Button'
+import { useSelectbox } from '@/components/FormElements/hooks'
 import { IconMail } from '@tabler/icons-react'
 
 function ContactForm() {
@@ -647,6 +1018,8 @@ function ContactForm() {
 
 - **Utku Sezici** — [@utkusezici](https://github.com/utkusezici)
 - **Berke Özenses** — [@berkeozenses](https://github.com/berkeozenses)
+
+Made at [Makdos](https://makdos.com/en/)
 
 ## License
 
