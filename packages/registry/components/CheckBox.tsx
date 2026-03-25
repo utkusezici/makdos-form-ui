@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+import { FieldError } from "react-hook-form";
 
 export interface ICheckBox {
   id?: string;
@@ -12,11 +13,12 @@ export interface ICheckBox {
   onChange?: (checked: boolean) => void;
   checked?: boolean;
   style?: string;
-  error?: any;
-  innerRef?: any,
-  defaultValue?: boolean,
-  isForm?: boolean
-
+  error?: FieldError;
+  /** Spread directly onto the input element. Typically used for ref forwarding from react-hook-form. */
+  innerRef?: React.HTMLAttributes<HTMLInputElement>;
+  defaultValue?: boolean;
+  labelStyle?: string;
+  isForm?: boolean;
 }
 
 const CheckBox = ({
@@ -33,92 +35,57 @@ const CheckBox = ({
   style,
   innerRef,
   error,
-  isForm
-
+  isForm,
 }: ICheckBox) => {
-  return (
-    <div className={`flex items-center ${style ? style : ""}`}>
-      {labelLeft ?
-        <div className="flex flex-col ml-2">
-          <label
-            className={` w-full text-label mb-0 ${disabled ? "cursor-not-allowed" : "cursor-pointer"} `}
-            htmlFor={isForm ? "" : name}
-            onClick={() => {
-              !disabled && onChange && onChange(!checked);
-            }}
-          >
-            {label ? label : labelJSX ? labelJSX : ""}
-          </label>
-          {error && !error?.ref?.value ?
-            <div className="flex items-center space-x-1 ">
-              <i className="ri-error-warning-fill text-error" />
-              <p className="text-xs text-error">{error ? error?.message : ""}</p>
-            </div>
-            :
-            <></>
-          }
-          <span
-            className={"text-sm text-border cursor-pointer"}
-            onClick={() => {
-              !disabled && onChange && onChange(!checked);
-            }}
-          >
-            {description ? description : ""}
-          </span>
+  const handleChange = () => {
+    if (!disabled) onChange?.(!checked);
+  };
+
+  const renderLabel = () => (
+    <div className="flex flex-col ml-2">
+      <label
+        className={`w-full text-label mb-0 ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+        htmlFor={isForm ? undefined : name}
+        onClick={handleChange}
+      >
+        {label ?? labelJSX ?? ""}
+      </label>
+      {error?.message && (
+        <div className="flex items-center space-x-1">
+          <i className="ri-error-warning-fill text-error" />
+          <p className="text-xs text-error">{error.message}</p>
         </div>
-        :
-        <></>
-      }
+      )}
+      {description && (
+        <span className="text-sm text-border cursor-pointer" onClick={handleChange}>
+          {description}
+        </span>
+      )}
+    </div>
+  );
+
+  return (
+    <div className={`flex items-center${style ? ` ${style}` : ""}`}>
+      {labelLeft && renderLabel()}
+
       <div>
         <input
           type="checkbox"
           id={id}
           name={name}
-          onChange={() => {
-            !disabled && onChange && onChange(!checked);
-          }}
+          onChange={handleChange}
           {...innerRef}
-          checked={checked ? checked : false}
+          checked={checked ?? false}
+          disabled={disabled}
           className={
             disabled
               ? "w-4 h-4 text-disable-text rounded-full bg-disable-background ring-0 cursor-not-allowed"
               : "w-4 h-4 accent-main hover:accent-main border-2 border-border text-sm cursor-pointer rounded-full outline-hidden ring-0 focus:ring-0 focus:outline-hidden focus:border-none focus:ring-transparent"
           }
-          disabled={disabled}
         />
       </div>
 
-
-      {labelRight ?
-        <div className="flex flex-col ml-2">
-          <label
-            className={` w-full text-label mb-0 ${disabled ? "cursor-not-allowed" : "cursor-pointer"} `}
-            onClick={() => {
-              !disabled && onChange && onChange(!checked);
-            }}
-          >
-            {label ? label : labelJSX ? labelJSX : ""}
-          </label>
-          {error && !error?.ref?.value ?
-            <div className="flex items-center space-x-1 ">
-              <i className="ri-error-warning-fill text-error" />
-              <p className="text-xs text-error">{error ? error?.message : ""}</p>
-            </div>
-            :
-            <></>
-          }
-          <span
-            className={"text-sm text-border cursor-pointer"}
-            onClick={() => {
-              !disabled && onChange && onChange(!checked);
-            }}
-          >
-            {description}
-          </span>
-        </div>
-        :
-        <></>
-      }
+      {labelRight && renderLabel()}
     </div>
   );
 }

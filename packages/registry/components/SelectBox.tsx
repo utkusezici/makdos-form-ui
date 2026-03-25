@@ -1,38 +1,64 @@
 import { useEffect, useRef, useState } from 'react'
 import CheckBox from './CheckBox'
 import { IconChevronDown, IconSearch, IconX } from '@tabler/icons-react'
-import { useFormContext } from 'react-hook-form'
+import { ControllerRenderProps, FieldError, FieldValues } from 'react-hook-form'
+
+export interface SelectBoxItem {
+    value?: unknown;
+    text: string;
+    checked?: boolean;
+    icon?: React.ReactNode;
+    otherInfo?: unknown;
+}
 
 export interface ISelectBox {
-    name?: any,
-    label?: string,
-    multiSelect?: boolean,
-    items?: any,
-    setItems?: any,
-    selectedItems?: any,
-    setSelectedItems?: any,
-    defaultSelect?: any,
-    style?: string,
-    search?: boolean,
-    placeholder?: string,
-    onChange?: any,
-    paginate?: boolean,
-    error?: any,
-    formDefaultValue?: any,
-    formDefaultTriggerFunction?: any,
-    formClickTriggerFunction?: any,
-    required?: boolean,
-    formSelectBox?: boolean,
-    disabled?: boolean,
-    field?: any,
-    price?: boolean
+    name?: string;
+    label?: string;
+    multiSelect?: boolean;
+    items?: SelectBoxItem[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setItems?: (items: any, valueKey: string, textKey: string, checkedKey?: any) => void;
+    selectedItems?: SelectBoxItem | SelectBoxItem[] | null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setSelectedItems?: (item?: any) => void;
+    searchAndAdd?: (val: string) => void;
+    defaultSelect?: SelectBoxItem;
+    style?: string;
+    search?: boolean;
+    placeholder?: string;
+    onChange?: (item: SelectBoxItem) => void;
+    paginate?: boolean;
+    error?: FieldError;
+    formDefaultValue?: string | number;
+    formDefaultTriggerFunction?: (item: SelectBoxItem) => void;
+    formClickTriggerFunction?: (item: SelectBoxItem) => void;
+    required?: boolean;
+    formSelectBox?: boolean;
+    disabled?: boolean;
+    field?: ControllerRenderProps<FieldValues, string>;
+    price?: boolean;
+}
+
+// Bileşen dışında tanımlanmış hook — React kurallarına uygun
+function useOutsideClick(ref: React.RefObject<HTMLElement | null>, onOutside: () => void) {
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
+                onOutside();
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [ref, onOutside]);
 }
 
 const SelectBox = ({
     name,
     label,
     multiSelect = false,
-    items,
+    items = [],
     setItems,
     selectedItems,
     setSelectedItems,
@@ -47,132 +73,90 @@ const SelectBox = ({
     formDefaultTriggerFunction,
     formClickTriggerFunction,
     required,
-    formSelectBox,
     disabled = false,
     field,
     price
 }: ISelectBox) => {
-    let setValue: any, watch: any;
-
-    if (formSelectBox) {
-        const formContext = useFormContext();
-        setValue = formContext.setValue;
-        watch = formContext.watch;
-    }
-
     const [enter, setEnter] = useState(false)
     const [openMenu, setOpenMenu] = useState(false)
-    const [searchInput, setSearchInput] = useState("")
+    const [searchInput, setSearchInput] = useState('')
     const [errorView, setErrorView] = useState(false)
-    const [listItems, setListItems] = useState([])
-    const [activeIndex, setActiveIndex] = useState<number | null>(null) // Aktif item indexini tutan state
+    const [listItems, setListItems] = useState<SelectBoxItem[]>([])
+    const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
+    const wrapperRef = useRef<HTMLDivElement>(null)
+    useOutsideClick(wrapperRef, () => {
+        setOpenMenu(false)
+        setEnter(false)
+    })
 
-    const selectItem = (item: any) => {
-        if (onChange) {
-            onChange(item)
-        }
-        let newFilteredResult: any[] = []
+    const selectItem = (item: SelectBoxItem) => {
+        onChange?.(item)
+
         if (multiSelect) {
-            items.map((x: any) => {
-                if (x.value !== item.value) {
-                    newFilteredResult.push(x)
-                } else {
-                    newFilteredResult.push({ ...item, checked: !item.checked })
-                }
-            })
-            setItems(newFilteredResult, "value", "text", "checked")
-            let newSelectedItems = selectedItems ? selectedItems : []
-            if (!newSelectedItems?.find((text: any) => text?.value === item.value)) {
-                setSelectedItems([...newSelectedItems, item])
-            }
-            else {
-                let filteredSelectedItems = newSelectedItems.filter((x: any) => x.value !== item.value)
-                if (filteredSelectedItems.length > 0) {
-                    setSelectedItems(filteredSelectedItems)
-                } else {
-                    setSelectedItems()
-                }
-            }
+            const newItems = items.map((x) =>
+                x.value === item.value ? { ...x, checked: !x.checked } : x
+            )
+            setItems?.(newItems, 'value', 'text', 'checked')
 
-        }
-        else {
-            setSelectedItems(item)
+            const current = (Array.isArray(selectedItems) ? selectedItems : []) as SelectBoxItem[]
+            const alreadySelected = current.some((x) => x.value === item.value)
+            if (alreadySelected) {
+                const filtered = current.filter((x) => x.value !== item.value)
+                setSelectedItems?.(filtered.length > 0 ? filtered : undefined)
+            } else {
+                setSelectedItems?.([...current, item])
+            }
+        } else {
+            setSelectedItems?.(item)
             setOpenMenu(false)
             setEnter(!enter)
         }
     }
 
-    const wrapperRef = useRef(null);
-    useOutsideAlerter(wrapperRef);
-
-    function useOutsideAlerter(ref: any) {
-        useEffect(() => {
-            function handleClickOutside(event: any) {
-                if (ref.current && !ref.current.contains(event.target)) {
-                    setOpenMenu(false);
-                    setEnter(false)
-                }
-            }
-            document.addEventListener("mousedown", handleClickOutside);
-            return () => {
-                document.removeEventListener("mousedown", handleClickOutside);
-            };
-        }, [ref]);
-    }
-
     useEffect(() => {
         if (defaultSelect) {
-            setSelectedItems(defaultSelect)
+            setSelectedItems?.(defaultSelect)
         }
     }, [defaultSelect])
 
-
-    useEffect(() => { //selectedItems state'i değiştiği zaman formun field'ına set ediyoruz.
-        if (field) {
-            field.onChange(selectedItems)
-        }
+    // selectedItems değiştiğinde form field'ını güncelle
+    useEffect(() => {
+        field?.onChange(selectedItems)
     }, [selectedItems])
 
-    useEffect(() => { //formun defaultundan gelen value değerine göre selectedItems state'ini set ediyoruz.
+    // formDefaultValue'ya göre başlangıç seçimini yap
+    useEffect(() => {
+        if (!items.length) return
 
-        if (items && formSelectBox && !multiSelect) {
-            if (items?.find((item: any) => item.value === formDefaultValue) || items?.find((item: any) => item.text === formDefaultValue)) {
-                const selectedItem = items?.find((item: any) => item.value === formDefaultValue);
-                if (selectedItem) {
-                    if (formDefaultTriggerFunction) {
-                        formDefaultTriggerFunction(selectedItem)
-                    }
-                    if (formSelectBox) {
-                        setValue(name, selectedItem)
-                    }
-                    return setSelectedItems(selectedItem);
-                }
+        if (formDefaultValue !== undefined && formDefaultValue !== null) {
+            const byValue = items.find((item) => item.value === formDefaultValue)
+            const byText = items.find((item) => item.text === formDefaultValue)
+            const match = byValue ?? byText
 
-                const selectedItem2 = items?.find((item: any) => item.text === formDefaultValue);
-                if (selectedItem2) {
-                    if (formDefaultTriggerFunction)
-                        formDefaultTriggerFunction(selectedItem2)
-                    return setSelectedItems(selectedItem2);
-                }
+            if (match) {
+                formDefaultTriggerFunction?.(match)
+                field?.onChange(match)
+                setSelectedItems?.(match)
             } else {
-                if (formDefaultValue)
-                    setSelectedItems()
-            }
-            if (listItems?.length > 0) {
-                if (JSON.stringify(items) !== JSON.stringify(listItems)) {
-                    setSelectedItems()
-                }
+                setSelectedItems?.(undefined)
             }
 
-
-            setListItems(items)
+            // Liste değiştiğinde seçimi sıfırla
+            if (listItems.length > 0 && items !== listItems) {
+                setSelectedItems?.(undefined)
+            }
         }
 
-        let selectedItemList = items.filter((x: any) => x?.checked)
-        if (multiSelect && items && JSON.stringify(selectedItemList) !== JSON.stringify(selectedItems)) { //listede check olanlar sayfa yüklendiği zaman seçilsin diye
-            setSelectedItems(selectedItemList)
+        setListItems(items)
 
+        // Çoklu seçimde: items içindeki checked olanları selectedItems'a yansıt
+        if (multiSelect) {
+            const checked = items.filter((x) => x.checked)
+            const current = Array.isArray(selectedItems) ? selectedItems : []
+            if (JSON.stringify(checked) !== JSON.stringify(current)) {
+                setSelectedItems?.(checked)
+            }
         }
     }, [formDefaultValue, items])
 
@@ -182,38 +166,34 @@ const SelectBox = ({
         }
     }, [error])
 
-    // Klavye ile gezinme ve seçim
-    const handleKeyDown = (e: any) => {
-        if (openMenu) {
-            if (e.key === 'ArrowDown') {
-                setActiveIndex((prevIndex) => (prevIndex === null || prevIndex === items.length - 1) ? 0 : prevIndex + 1)
-            }
-            if (e.key === 'ArrowUp') {
-                setActiveIndex((prevIndex) => (prevIndex === null || prevIndex === 0) ? items.length - 1 : prevIndex - 1)
-            }
-            if (e.key === 'Enter' && activeIndex !== null) {
-                if (searchInput === "") {
-                    selectItem(items[activeIndex])
-                } else {
-                    selectItem(items.filter((x: any) => x.text?.toLowerCase().includes(searchInput.toLowerCase()))[activeIndex])
-                }
-            }
+    // Klavye navigasyonu
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (!openMenu) return
+
+        if (e.key === 'ArrowDown') {
+            setActiveIndex((prev) => (prev === null || prev === items.length - 1 ? 0 : prev + 1))
+        }
+        if (e.key === 'ArrowUp') {
+            setActiveIndex((prev) => (prev === null || prev === 0 ? items.length - 1 : prev - 1))
+        }
+        if (e.key === 'Enter' && activeIndex !== null) {
+            const filtered = items.filter((x) =>
+                x.text?.toLowerCase().includes(searchInput.toLowerCase())
+            )
+            selectItem(filtered[activeIndex])
         }
     }
 
     useEffect(() => {
-
-        if (openMenu && activeIndex !== -1) {
-            const activeItem = document.getElementById(`selectbox-item-${activeIndex}`);
-            activeItem?.scrollIntoView({
+        if (openMenu && activeIndex !== null && activeIndex !== -1) {
+            document.getElementById(`selectbox-item-${activeIndex}`)?.scrollIntoView({
                 block: 'nearest',
-                inline: 'start'
-            });
+                inline: 'start',
+            })
         }
-
-        document.addEventListener("keydown", handleKeyDown)
+        document.addEventListener('keydown', handleKeyDown)
         return () => {
-            document.removeEventListener("keydown", handleKeyDown)
+            document.removeEventListener('keydown', handleKeyDown)
         }
     }, [openMenu, activeIndex])
 
@@ -221,114 +201,118 @@ const SelectBox = ({
         setActiveIndex(null)
     }, [searchInput])
 
+    const filteredItems = items.filter((x) =>
+        x.text?.toLowerCase().includes(searchInput.toLowerCase())
+    )
+
+    const single = (!Array.isArray(selectedItems) && selectedItems) ? selectedItems as SelectBoxItem : undefined
+    const multi = Array.isArray(selectedItems) ? selectedItems as SelectBoxItem[] : undefined
+
     return (
-        <div ref={wrapperRef} className={`relative ${style ? style : ""}`}>
-            <div className="flex space-x-1 w-full ">
-                {label &&
-                    <span className="mb-1 text-text">{label ? label : "Dummy"}</span>
-                }
-                {required &&
-                    <span className="text-xs mt-1 text-error">*</span>
-                }
+        <div ref={wrapperRef} className={`relative${style ? ` ${style}` : ''}`}>
+            <div className="flex space-x-1 w-full">
+                {label && <span className="mb-1 text-text">{label}</span>}
+                {required && <span className="text-xs mt-1 text-error">*</span>}
             </div>
-            <div className={`${enter ? " border-focus-border" : "border-border"} ${paginate ? "h-10" : "py-3.5"} border rounded-lg items-center flex justify-between  ${disabled ? "bg-disable-background cursor-not-allowed" : "bg-background-form cursor-pointer"}`}
+
+            <div
+                className={`${enter ? 'border-focus-border' : 'border-border'} ${paginate ? 'h-10' : 'py-3.5'} border rounded-lg items-center flex justify-between ${disabled ? 'bg-disable-background cursor-not-allowed' : 'bg-background-form cursor-pointer'}`}
                 onClick={() => {
-                    !disabled && setEnter(!enter)
-                    !disabled && setOpenMenu(!openMenu)
-                }}>
-                <div className='flex items-center'>
-                    {!selectedItems ?
-                        <p className="pl-3 text-placeholder font-medium text-sm ">{placeholder && placeholder}</p>
-                        :
-                        (selectedItems?.text ?
-                            <p className="pl-3 text-text whitespace-nowrap text-sm">{selectedItems?.text}</p>
-                            :
-                            selectedItems?.map((item: any, i: number) => (
-                                <div className='flex items-center' key={i} >
-
-                                    <p className="pl-3 text-text whitespace-nowrap text-sm">{item?.text}</p>
-                                    {
-                                        i !== selectedItems?.length - 1 &&
-                                        <p className=" text-text whitespace-nowrap text-sm">, </p>
-                                    }
-                                </div>
-
-                            ))
-                        )
+                    if (!disabled) {
+                        setEnter(!enter)
+                        setOpenMenu(!openMenu)
                     }
-
+                }}
+            >
+                <div className="flex items-center">
+                    {!selectedItems ? (
+                        <p className="pl-3 text-placeholder font-medium text-sm">{placeholder}</p>
+                    ) : single?.text ? (
+                        <p className="pl-3 text-text whitespace-nowrap text-sm">{single.text}</p>
+                    ) : (
+                        multi?.map((item, i) => (
+                            <div className="flex items-center" key={String(item.value ?? i)}>
+                                <p className="pl-3 text-text whitespace-nowrap text-sm">{item.text}</p>
+                                {i !== multi.length - 1 && (
+                                    <p className="text-text whitespace-nowrap text-sm">, </p>
+                                )}
+                            </div>
+                        ))
+                    )}
                 </div>
                 <IconChevronDown size={18} className="mr-3 text-text" />
             </div>
 
-            {openMenu && items?.length > 0 &&
-                <div className={`${search ? "" : "border"} ${paginate ? "bottom-[50px]" : "mt-2"} absolute border-border rounded-md w-full z-50 bg-white`} >
-                    {search &&
+            {openMenu && items.length > 0 && (
+                <div className={`${search ? '' : 'border'} ${paginate ? 'bottom-[50px]' : 'mt-2'} absolute border-border rounded-md w-full z-50 bg-white`}>
+                    {search && (
                         <div className="relative flex">
-                            <input autoFocus onChange={(e) => setSearchInput(e.target.value)} placeholder="Search" className="w-full py-2 pl-2 pr-6 border rounded-t-lg outline-hidden border-border text-text" />
+                            <input
+                                autoFocus
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                placeholder="Search"
+                                className="w-full py-2 pl-2 pr-6 border rounded-t-lg outline-hidden border-border text-text"
+                            />
                             <div className="absolute right-3 top-3">
-                                {searchInput.length > 1 ?
-                                    <IconX size={18} className=" cursor-pointer  text-text" onClick={() => setSearchInput("")} />
-                                    :
-                                    <IconSearch size={18} className=" text-text" />
-                                }
+                                {searchInput.length > 1 ? (
+                                    <IconX size={18} className="cursor-pointer text-text" onClick={() => setSearchInput('')} />
+                                ) : (
+                                    <IconSearch size={18} className="text-text" />
+                                )}
                             </div>
                         </div>
-                    }
-                    <div className={`${search ? "border-b border-l border-r rounded-b-md border-border " : "rounded-md"} max-h-[150px] customScroll overflow-y-auto `}>
-                        {items?.filter((x: any) => x.text?.toLowerCase().includes(searchInput.toLowerCase())).map((item: any, i: number) =>
-                            <div id={`selectbox-item-${i}`}
-                                className={` flex flex-col duration-200 cursor-pointer hover:bg-selectbox-hover-item ${activeIndex === i ? 'bg-selectbox-hover-item' : ''}`} key={i} onClick={() => { selectItem(item); formClickTriggerFunction && formClickTriggerFunction(item) }} >
-                                {i !== 0 &&
-                                    <div className="w-full border-b border-border" />
-                                }
+                    )}
+                    <div className={`${search ? 'border-b border-l border-r rounded-b-md border-border' : 'rounded-md'} max-h-[150px] customScroll overflow-y-auto`}>
+                        {filteredItems.map((item, i) => (
+                            <div
+                                id={`selectbox-item-${i}`}
+                                key={String(item.value ?? i)}
+                                className={`flex flex-col duration-200 cursor-pointer hover:bg-selectbox-hover-item ${activeIndex === i ? 'bg-selectbox-hover-item' : ''}`}
+                                onClick={() => {
+                                    selectItem(item)
+                                    formClickTriggerFunction?.(item)
+                                }}
+                            >
+                                {i !== 0 && <div className="w-full border-b border-border" />}
                                 <div className="flex items-center px-2 py-2 space-x-2">
-                                    {multiSelect &&
+                                    {multiSelect && (
                                         <CheckBox
-                                            id={item?.text}
-                                            name={item?.text}
-                                            checked={item?.checked}
+                                            id={item.text}
+                                            name={item.text}
+                                            checked={item.checked}
                                             onChange={() => {
-                                                selectItem(item);
+                                                selectItem(item)
                                                 setErrorView(false)
                                             }}
                                         />
-                                    }
-                                    <div className='flex items-center justify-between w-full'>
-                                        <div className="flex items-center  space-x-2">
-                                            {item.icon &&
-                                                <p>{item.icon}</p>
-                                            }
-                                            <p className="text-sm font-medium text-text">
-                                                {item?.text}
-                                            </p>
+                                    )}
+                                    <div className="flex items-center justify-between w-full">
+                                        <div className="flex items-center space-x-2">
+                                            {item.icon && <p>{item.icon}</p>}
+                                            <p className="text-sm font-medium text-text">{item.text}</p>
                                         </div>
-                                        {price &&
+                                        {price && (
                                             <p className="text-sm font-medium text-text">
-                                                {item?.otherInfo?.price} $
+                                                {(item.otherInfo as Record<string, unknown>)?.price as string | number} $
                                             </p>
-
-                                        }
+                                        )}
                                     </div>
-
                                 </div>
                             </div>
-                        )
-                        }
+                        ))}
                     </div>
                 </div>
-            }
+            )}
+
             <div className="h-3 mt-0.5">
-                {errorView ?
-                    <div className="flex items-center space-x-1 ">
+                {errorView && error?.message && (
+                    <div className="flex items-center space-x-1">
                         <i className="ri-error-warning-fill text-error" />
-                        <p className="text-xs text-error">{error ? error?.message : ""}</p>
+                        <p className="text-xs text-error">{error.message}</p>
                     </div>
-                    :
-                    <></>
-                }
+                )}
             </div>
-        </div >
+        </div>
     )
 }
 

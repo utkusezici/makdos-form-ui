@@ -1,15 +1,14 @@
-"use client"
 import { useEffect, useRef } from "react";
 import type { PropsWithChildren } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import type { DefaultValues, FieldValues, UseFormReturn } from "react-hook-form";
+import type { DefaultValues, FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 
 interface Props<T extends FieldValues = FieldValues> extends PropsWithChildren {
-  methods?: UseFormReturn<T, any>;
+  methods?: UseFormReturn<T>;
   defaultValues?: DefaultValues<T>;
-  onSubmit: (data: T, isCtrlS: boolean) => void; // isCtrlS parametresini ekleyin
+  onSubmit: (data: T, isCtrlS: boolean) => void;
   onMethods?: (methods: UseFormReturn<T>) => void;
-  resettable?: boolean // Formun sıfırlanmasını istediğimizde true olacak
+  resettable?: boolean;
 }
 
 export type SubmitFunction<T extends FieldValues = FieldValues> = (data: T, isCtrlS: boolean) => void;
@@ -20,37 +19,34 @@ function Form<T extends FieldValues = FieldValues>(props: Props<T>) {
   const isCtrlS = useRef(false);
 
   useEffect(() => {
-    if (props.defaultValues, !props.resettable) {
+    if (props.defaultValues && !props.resettable) {
       methods.reset(props.defaultValues);
     }
   }, [props.defaultValues, methods]);
 
   useEffect(() => {
-    if (props.onMethods) {
-      props.onMethods(methods); // methods'u dışarıya gönderiyoruz
-    }
+    props.onMethods?.(methods);
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === "s") {
-        event.preventDefault(); // Tarayıcının varsayılan kaydetme işlemini engeller
-        isCtrlS.current = true; // Ctrl + S durumunu ayarlayın
+        event.preventDefault();
+        isCtrlS.current = true;
         methods.handleSubmit((data) => {
           props.onSubmit(data, isCtrlS.current);
-          isCtrlS.current = false; // Submit işleminden sonra sıfırlayın
+          isCtrlS.current = false;
         })();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [methods, props.onSubmit]);
 
-  const handleFormSubmit = (data: T) => {
+  const handleFormSubmit: SubmitHandler<T> = (data) => {
     props.onSubmit(data, isCtrlS.current);
-    isCtrlS.current = false; // Her submit'ten sonra sıfırlayın
+    isCtrlS.current = false;
   };
 
   return (

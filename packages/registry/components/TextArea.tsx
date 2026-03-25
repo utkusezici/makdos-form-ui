@@ -1,5 +1,6 @@
 import { IconAlertTriangleFilled } from '@tabler/icons-react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { ControllerRenderProps, FieldValues } from 'react-hook-form'
 
 export interface ITextArea {
   id?: string
@@ -8,19 +9,18 @@ export interface ITextArea {
   placeholder?: string
   value?: string
   defaultValue?: string
-  onChange?: any
+  onChange?: (value: string) => void
   rows?: number
   required?: boolean
   disabled?: boolean
-  min?: number
-  max?: number
   style?: string
-  innerRef?: any
+  /** Spread directly onto the textarea element. Typically used for ref forwarding from react-hook-form. */
+  innerRef?: React.HTMLAttributes<HTMLTextAreaElement>
   inputStyle?: string
   error?: string
-  field?: any,
-  onKeyPress?: any,
-  ticketDetails?: boolean
+  field?: ControllerRenderProps<FieldValues, string>
+  /** @deprecated Use `onKeyDown` instead — `onKeyPress` is deprecated in HTML. */
+  onKeyPress?: React.KeyboardEventHandler<HTMLTextAreaElement>
 }
 
 const TextArea = ({
@@ -34,74 +34,53 @@ const TextArea = ({
   rows,
   required,
   disabled,
-  min,
-  max,
   style,
   innerRef,
   inputStyle,
   error,
   field,
   onKeyPress,
-  ticketDetails
 }: ITextArea) => {
-
-  const [change, setChange] = useState<ITextArea | Record<string, any>>()
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onChange) {
-      if (field) {
-        field.onChange(e.target.value)
-      }
-      onChange(e.target.value);
-    }
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    field?.onChange(e.target.value);
+    onChange?.(e.target.value);
   };
 
-  useEffect(() => { // value değiştiğinde form içerisindeki value yu değiştirmek için
+  useEffect(() => {
     if (value) {
-      if (field) {
-        field.onChange(value)
-      }
+      field?.onChange(value);
     }
   }, [value])
-  return (
-    <div className={`flex flex-col space-y-1 ${style && style}`}>
-      <div className='flex items-center space-x-1'>
-        {label &&
-          <label className=" text-text">{label ? label : ""}</label>
-        }
 
-        {required &&
-          <span className="text-xs mt-1 text-error">*</span>
-        }
+  return (
+    <div className={`flex flex-col space-y-1${style ? ` ${style}` : ""}`}>
+      <div className='flex items-center space-x-1'>
+        {label && <label className="text-text">{label}</label>}
+        {required && <span className="text-xs mt-1 text-error">*</span>}
       </div>
+
       <textarea
         id={id}
         name={name}
-        placeholder={placeholder ? placeholder : ""}
-        value={value && value}
+        placeholder={placeholder}
+        value={value}
         onChange={handleInputChange}
-        defaultValue={defaultValue && defaultValue}
-        rows={rows && rows}
-        min={min && min}
-        max={max && max}
-        disabled={disabled && disabled}
-        className={`${inputStyle ? inputStyle : "w-full py-2 px-2"}  ${error ? "focus:border-error " : " focus:border-focus-border"} border rounded-lg bg-background-form border-border text-text placeholder-placeholder  focus:placeholder-focus-placeholder focus:outline-hidden disabled:text-disable-text disabled:bg-disable-background `}
-        {...change}
+        defaultValue={defaultValue}
+        rows={rows}
+        disabled={disabled}
+        className={`${inputStyle ?? "w-full py-2 px-2"} ${error ? "focus:border-error" : "focus:border-focus-border"} border rounded-lg bg-background-form border-border text-text placeholder-placeholder focus:placeholder-focus-placeholder focus:outline-hidden disabled:text-disable-text disabled:bg-disable-background`}
         {...innerRef}
-        onKeyPress={onKeyPress && onKeyPress}
-
+        onKeyPress={onKeyPress}
       />
-      <div className={`${ticketDetails ? '' : 'h-4'}`}>
-        {error ?
+
+      <div className="h-4">
+        {error && (
           <div className="flex items-center space-x-1">
             <IconAlertTriangleFilled className="text-error" size={12} />
-            <p className="text-xs text-error">{error ? error : ""}</p>
+            <p className="text-xs text-error">{error}</p>
           </div>
-          :
-          <></>
-        }
+        )}
       </div>
-
     </div>
   )
 }

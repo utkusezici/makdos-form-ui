@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { useController, useFormContext } from "react-hook-form";
-import type { FieldValues, Path, RegisterOptions, UseControllerReturn } from "react-hook-form";
+import type { FieldValues, Path, PathValue, RegisterOptions, UseControllerReturn } from "react-hook-form";
 
 interface Props<T extends FieldValues = FieldValues> {
   name: Path<T>;
@@ -10,30 +10,31 @@ interface Props<T extends FieldValues = FieldValues> {
   >;
   children: (
     controller: UseControllerReturn<FieldValues, Path<T>> & {
-      setValue: (value: any) => void;
+      setValue: (value: unknown) => void;
     }
-  ) => any;
-  resetValue?: any;
+  ) => ReactNode;
+  resetValue?: unknown;
 }
 
 function Generic<T extends FieldValues = FieldValues>(props: Props<T>) {
-  const formMethods = useFormContext();
+  const formMethods = useFormContext<T>();
   const controller = useController({
     name: props.name as Path<T>,
-    control: formMethods.control,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    control: formMethods.control as any,
     rules: props.rules,
   });
 
   useEffect(() => {
     if (props.resetValue) {
-      formMethods.setValue(props.name as string, "");
+      formMethods.setValue(props.name, "" as PathValue<T, Path<T>>);
     }
-  }, [props.resetValue])
+  }, [props.resetValue, props.name]);
 
   return props.children({
     ...controller,
     setValue(value) {
-      formMethods.setValue(props.name, value);
+      formMethods.setValue(props.name, value as PathValue<T, Path<T>>);
     },
   });
 }

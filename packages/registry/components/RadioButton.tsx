@@ -1,14 +1,15 @@
 
 type Props = {
-    items: { id: string, text: string }[],
-    name: string
-    onChange: React.Dispatch<React.SetStateAction<any>>
-    selected: string
+    items: { id: string; text: string }[];
+    name: string;
+    onChange: (value: string) => void;
+    selected: string;
+    style?: string;
 }
 
-function RadioButton({ items, name, selected, onChange }: Props) {
+function RadioButton({ items, name, selected, onChange, style }: Props) {
     return (
-        <div className="flex items-center space-x-6">
+        <div className={`flex items-center space-x-6${style ? ` ${style}` : ""}`}>
 
             {items.map((item, i) => {
                 return (
