@@ -1,6 +1,6 @@
 import { IconAlertTriangleFilled } from '@tabler/icons-react'
 import React from 'react'
-import { FieldError } from 'react-hook-form'
+import type { FieldError } from 'react-hook-form'
 
 export interface IToggle {
   id: string

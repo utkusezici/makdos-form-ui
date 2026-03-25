@@ -1,6 +1,6 @@
 import { IconAlertTriangleFilled } from '@tabler/icons-react'
 import React, { useEffect } from 'react'
-import { ControllerRenderProps, FieldValues } from 'react-hook-form'
+import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 
 export interface ITextArea {
   id?: string

@@ -1,7 +1,7 @@
 import { IconAlertTriangleFilled, IconEye, IconEyeOff, IconSearch } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
-import { ControllerRenderProps, FieldValues } from 'react-hook-form'
+import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 
 export interface ITextInput {
   id?: string

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import CheckBox from './CheckBox'
 import { IconChevronDown, IconSearch, IconX } from '@tabler/icons-react'
-import { ControllerRenderProps, FieldError, FieldValues } from 'react-hook-form'
+import type { ControllerRenderProps, FieldError, FieldValues } from 'react-hook-form'
 
 export interface SelectBoxItem {
     value?: unknown;

@@ -1,7 +1,7 @@
 import { IconAlertTriangleFilled } from '@tabler/icons-react'
 import { useEffect } from 'react'
 import { useDebounce } from 'react-use'
-import { ControllerRenderProps, FieldValues } from 'react-hook-form'
+import type { ControllerRenderProps, FieldValues } from 'react-hook-form'
 
 export interface INumeric {
     id?: string
